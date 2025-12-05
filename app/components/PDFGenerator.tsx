@@ -10,11 +10,12 @@ Font.register({
   fonts: [
     {
       // Hosted font to avoid bundling binary assets in the repository
-      src: "https://raw.githubusercontent.com/google/fonts/main/ofl/notosans/NotoSans-Regular.ttf",
+      // Google hosts the TTFs in the googlefonts/noto-fonts repo (hinted set)
+      src: "https://raw.githubusercontent.com/googlefonts/noto-fonts/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
       fontWeight: "normal",
     },
     {
-      src: "https://raw.githubusercontent.com/google/fonts/main/ofl/notosans/NotoSans-Bold.ttf",
+      src: "https://raw.githubusercontent.com/googlefonts/noto-fonts/main/hinted/ttf/NotoSans/NotoSans-Bold.ttf",
       fontWeight: "bold",
     },
   ],
