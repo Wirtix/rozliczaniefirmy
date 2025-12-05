@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: #f8fafc;
+}
+
+.card {
+  @apply bg-white border border-slate-200 rounded-xl shadow-sm;
+}
+
+.field-label {
+  @apply text-sm font-medium text-slate-700;
+}
+
+.field-input {
+  @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20;
+}
+
+.section-title {
+  @apply text-xs uppercase tracking-wide text-slate-500 font-semibold;
+}
+
+.table-head {
+  @apply bg-slate-100 text-xs uppercase tracking-wide text-slate-600;
+}
+
+.table-cell {
+  @apply px-3 py-2 text-sm text-slate-700 border border-slate-200;
+}
+
+.pdf-border {
+  border: 1px solid #1f2937;
+}
