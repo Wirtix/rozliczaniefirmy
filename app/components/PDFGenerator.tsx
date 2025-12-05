@@ -5,21 +5,31 @@ import { COMPANY_INFO } from "../lib/company";
 import { amountToWords, formatCurrency } from "../lib/format";
 import { InvoiceInput, Worker } from "../lib/types";
 
-Font.register({
-  family: "NotoSans",
-  fonts: [
-    {
-      // Hosted font to avoid bundling binary assets in the repository
-      // Google hosts the TTFs in the googlefonts/noto-fonts repo (hinted set)
-      src: "https://raw.githubusercontent.com/googlefonts/noto-fonts/main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
-      fontWeight: "normal",
-    },
-    {
-      src: "https://raw.githubusercontent.com/googlefonts/noto-fonts/main/hinted/ttf/NotoSans/NotoSans-Bold.ttf",
-      fontWeight: "bold",
-    },
-  ],
-});
+// Avoid double registration during Fast Refresh
+let fontRegistered = false;
+
+function ensureFontRegistered() {
+  if (fontRegistered) return;
+
+  Font.register({
+    family: "NotoSans",
+    fonts: [
+      {
+        // Use jsDelivr mirror of googlefonts/noto-fonts to prevent raw.githubusercontent 404/403 errors
+        src: "https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts@main/hinted/ttf/NotoSans/NotoSans-Regular.ttf",
+        fontWeight: 400,
+        format: "truetype",
+      },
+      {
+        src: "https://cdn.jsdelivr.net/gh/googlefonts/noto-fonts@main/hinted/ttf/NotoSans/NotoSans-Bold.ttf",
+        fontWeight: 700,
+        format: "truetype",
+      },
+    ],
+  });
+
+  fontRegistered = true;
+}
 
 const styles = StyleSheet.create({
   page: {
@@ -46,6 +56,7 @@ const styles = StyleSheet.create({
 });
 
 function InvoiceDocument({ worker, invoice, grossTotal }: { worker?: Worker; invoice: InvoiceInput; grossTotal: number }) {
+  ensureFontRegistered();
   const words = amountToWords(grossTotal || 0);
   const city = COMPANY_INFO.city || COMPANY_INFO.addressLine2;
   const issueDate = invoice.issueDate || "...............";
