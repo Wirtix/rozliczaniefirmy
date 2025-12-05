@@ -1,12 +1,24 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { InvoiceForm } from "./components/InvoiceForm";
 import { InvoicePreview } from "./components/InvoicePreview";
-import { PDFGenerator } from "./components/PDFGenerator";
 import { loadWorkers } from "./lib/storage";
 import { InvoiceInput, Worker } from "./lib/types";
+
+const PDFGenerator = dynamic(() => import("./components/PDFGenerator").then((mod) => mod.PDFGenerator), {
+  ssr: false,
+  loading: () => (
+    <button
+      disabled
+      className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-300 text-white font-semibold shadow-sm"
+    >
+      Ładowanie...
+    </button>
+  ),
+});
 
 export default function HomePage() {
   const [workers, setWorkers] = useState<Worker[]>([]);
