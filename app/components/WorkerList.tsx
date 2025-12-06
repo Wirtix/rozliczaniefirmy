@@ -6,7 +6,7 @@ import { WorkerForm } from "./WorkerForm";
 
 export type WorkerListProps = {
   workers: Worker[];
-  onChange: (workers: Worker[]) => void;
+  onChange: (workers: Worker[]) => void | Promise<void>;
   onSelect?: (worker: Worker) => void;
 };
 

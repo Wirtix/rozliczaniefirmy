@@ -10,12 +10,18 @@ export default function WorkersPage() {
   const [workers, setWorkers] = useState<Worker[]>([]);
 
   useEffect(() => {
-    setWorkers(loadWorkers());
+    let mounted = true;
+    loadWorkers().then((data) => {
+      if (mounted) setWorkers(data);
+    });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  const handleChange = (updated: Worker[]) => {
+  const handleChange = async (updated: Worker[]) => {
     setWorkers(updated);
-    persistWorkers(updated);
+    await persistWorkers(updated);
   };
 
   return (
@@ -25,7 +31,7 @@ export default function WorkersPage() {
           <p className="section-title">Pracownicy</p>
           <h2 className="text-2xl font-semibold text-primary">Zarządzaj danymi zleceniobiorców</h2>
           <p className="text-slate-600 max-w-2xl mt-1">
-            Dodawaj, edytuj i usuwaj pracowników. Wszystkie dane pozostają zapisane lokalnie w Twojej przeglądarce.
+            Dodawaj, edytuj i usuwaj pracowników. Dane są teraz przechowywane w pliku po stronie serwera aplikacji.
           </p>
         </div>
         <Link

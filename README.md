@@ -1,9 +1,9 @@
 # Generator rachunków do umowy zlecenie
 
-Aplikacja Next.js 14 w TypeScript do lokalnego wystawiania rachunków do umowy zlecenia. Dane pracowników są przechowywane w `localStorage`, a PDF odwzorowuje układ klasycznego rachunku.
+Aplikacja Next.js 14 w TypeScript do lokalnego wystawiania rachunków do umowy zlecenia. Dane pracowników są przechowywane w pliku `data/workers.json` na serwerze aplikacji, a PDF odwzorowuje układ klasycznego rachunku.
 
 ## Funkcje
-- Dodawanie, edycja i usuwanie pracowników (dane lokalne).
+- Dodawanie, edycja i usuwanie pracowników zapisywanych w pliku `data/workers.json`.
 - Formularz wystawiania rachunku z numerem, okresem, godzinami/kwotą brutto.
 - Podgląd HTML i eksport do PDF (@react-pdf/renderer) z danymi firmy:
   - **Korepetycje na już Oskar Skutnik**
