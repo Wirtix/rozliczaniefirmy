@@ -47,7 +47,7 @@ export function InvoicePreview({ worker, invoice, grossTotal, signature, classNa
         <div>
           <p className="font-semibold">Zleceniobiorca: {worker?.fullName || "................................"}</p>
           <p>{worker?.address || "........................................................"}</p>
-          <p>PESEL: {worker?.pesel || "................"}</p>
+          <p>{worker?.pesel || "................"}</p>
         </div>
         <p className="text-slate-700">
           za wykonanie prac zgodnie z umową nr: {worker?.contractNumber || "........"} z dnia {worker?.contractDate || "........"} w
@@ -113,8 +113,8 @@ export function InvoicePreview({ worker, invoice, grossTotal, signature, classNa
                 <>
                   <p>Przez: {signature.signerName}</p>
                   <p className="text-[10px] leading-tight text-slate-700">
-                    <span className="font-semibold text-slate-800">ID podpisu:</span>{" "}
-                    <span className="inline-block max-w-full break-all rounded bg-white/70 px-1 py-[2px] font-mono text-[9px] leading-snug text-slate-900 ring-1 ring-slate-200">
+                    <span className="block font-semibold text-slate-800">ID podpisu:</span>
+                    <span className="block w-full break-all rounded bg-white/70 px-1 py-[2px] font-mono text-[9px] leading-snug text-slate-900 ring-1 ring-slate-200">
                       {signatureIdWrapped}
                     </span>
                   </p>
