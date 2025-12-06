@@ -2,8 +2,8 @@
 
 import { Document, Font, Image, Page, PDFDownloadLink, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { COMPANY_INFO } from "../lib/company";
-import { amountToWords, formatCurrency } from "../lib/format";
-import { InvoiceInput, Worker } from "../lib/types";
+import { amountToWords, formatCurrency, formatDateTime } from "../lib/format";
+import { InvoiceInput, SignatureInfo, Worker } from "../lib/types";
 
 // Avoid double registration during Fast Refresh
 let fontRegistered = false;
@@ -54,14 +54,37 @@ const styles = StyleSheet.create({
   titleRight: { fontSize: 10, textAlign: "right" },
   sectionTitle: { fontSize: 11, fontWeight: "bold", marginBottom: 4 },
   logo: { width: 120, marginBottom: 8 },
+  signatureStamp: {
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: "#9ca3af",
+    padding: 6,
+    borderRadius: 4,
+    marginTop: 6,
+    width: "100%",
+    backgroundColor: "#f8fafc",
+  },
+  signatureLabel: { fontSize: 10, fontWeight: "bold", marginBottom: 2 },
+  signatureMeta: { fontSize: 9 },
 });
 
-function InvoiceDocument({ worker, invoice, grossTotal }: { worker?: Worker; invoice: InvoiceInput; grossTotal: number }) {
+function InvoiceDocument({
+  worker,
+  invoice,
+  grossTotal,
+  signature,
+}: {
+  worker?: Worker;
+  invoice: InvoiceInput;
+  grossTotal: number;
+  signature: SignatureInfo;
+}) {
   ensureFontRegistered();
   const words = amountToWords(grossTotal || 0);
   const city = COMPANY_INFO.city || COMPANY_INFO.addressLine2;
   const issueDate = invoice.issueDate || "...............";
   const grossValue = formatCurrency(grossTotal);
+  const signedAt = formatDateTime(new Date(signature.signedAtISO));
 
   return (
     <Document>
@@ -148,6 +171,12 @@ function InvoiceDocument({ worker, invoice, grossTotal }: { worker?: Worker; inv
           <View style={styles.signBox}>
             <View style={styles.signLine} />
             <Text style={{ fontSize: 10 }}>Zleceniodawca</Text>
+            <View style={styles.signatureStamp}>
+              <Text style={styles.signatureLabel}>Podpisano elektronicznie</Text>
+              <Text style={styles.signatureMeta}>Przez: {signature.signerName}</Text>
+              <Text style={styles.signatureMeta}>ID podpisu: {signature.signatureId}</Text>
+              <Text style={styles.signatureMeta}>Data: {signedAt}</Text>
+            </View>
           </View>
         </View>
 
@@ -160,10 +189,20 @@ function InvoiceDocument({ worker, invoice, grossTotal }: { worker?: Worker; inv
   );
 }
 
-export function PDFGenerator({ worker, invoice, grossTotal }: { worker?: Worker; invoice: InvoiceInput; grossTotal: number }) {
+export function PDFGenerator({
+  worker,
+  invoice,
+  grossTotal,
+  signature,
+}: {
+  worker?: Worker;
+  invoice: InvoiceInput;
+  grossTotal: number;
+  signature: SignatureInfo;
+}) {
   return (
     <PDFDownloadLink
-      document={<InvoiceDocument worker={worker} invoice={invoice} grossTotal={grossTotal} />}
+      document={<InvoiceDocument worker={worker} invoice={invoice} grossTotal={grossTotal} signature={signature} />}
       fileName={`${invoice.invoiceNumber || "rachunek"}.pdf`}
       className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-white font-semibold shadow-sm hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed"
     >

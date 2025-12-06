@@ -1,18 +1,20 @@
 "use client";
 
 import { COMPANY_INFO } from "../lib/company";
-import { amountToWords, formatCurrency } from "../lib/format";
-import { InvoiceInput, Worker } from "../lib/types";
+import { amountToWords, formatCurrency, formatDateTime } from "../lib/format";
+import { InvoiceInput, SignatureInfo, Worker } from "../lib/types";
 
 export type InvoicePreviewProps = {
   worker?: Worker;
   invoice: InvoiceInput;
   grossTotal: number;
+  signature: SignatureInfo;
 };
 
-export function InvoicePreview({ worker, invoice, grossTotal }: InvoicePreviewProps) {
+export function InvoicePreview({ worker, invoice, grossTotal, signature }: InvoicePreviewProps) {
   const words = amountToWords(grossTotal || 0);
   const city = COMPANY_INFO.city || COMPANY_INFO.addressLine2;
+  const signedAt = formatDateTime(new Date(signature.signedAtISO));
 
   return (
     <div className="card p-6 space-y-6">
@@ -102,6 +104,12 @@ export function InvoicePreview({ worker, invoice, grossTotal }: InvoicePreviewPr
           <div>
             <div className="h-10 border-b border-slate-400" />
             <p className="text-xs mt-2">Zleceniodawca</p>
+            <div className="mt-3 p-3 border border-dashed border-slate-300 rounded text-left text-[11px] leading-tight bg-slate-50">
+              <p className="font-semibold text-slate-800">Podpisano elektronicznie</p>
+              <p>Przez: {signature.signerName}</p>
+              <p>ID podpisu: {signature.signatureId}</p>
+              <p>Data: {signedAt}</p>
+            </div>
           </div>
         </div>
         <div>

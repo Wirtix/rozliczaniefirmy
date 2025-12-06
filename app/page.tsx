@@ -6,7 +6,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { InvoiceForm } from "./components/InvoiceForm";
 import { InvoicePreview } from "./components/InvoicePreview";
 import { loadWorkers } from "./lib/storage";
-import { InvoiceInput, Worker } from "./lib/types";
+import { InvoiceInput, SignatureInfo, Worker } from "./lib/types";
+import { createSignatureInfo } from "./lib/signature";
 
 const PDFGenerator = dynamic(() => import("./components/PDFGenerator").then((mod) => mod.PDFGenerator), {
   ssr: false,
@@ -38,6 +39,7 @@ export default function HomePage() {
     logoDataUrl: null,
   });
   const [grossTotal, setGrossTotal] = useState(0);
+  const [signature, setSignature] = useState<SignatureInfo>(() => createSignatureInfo());
 
   useEffect(() => {
     setWorkers(loadWorkers());
@@ -47,6 +49,11 @@ export default function HomePage() {
     setInvoice(data);
     setGrossTotal(total);
   }, []);
+
+  useEffect(() => {
+    const seed = `${invoice.workerId || "no-worker"}|${invoice.invoiceNumber}|${invoice.issueDate}|${invoice.period}|${grossTotal}`;
+    setSignature(createSignatureInfo(seed));
+  }, [invoice.workerId, invoice.invoiceNumber, invoice.issueDate, invoice.period, grossTotal]);
 
   const selectedWorker = useMemo(
     () => workers.find((w) => w.id === invoice?.workerId),
@@ -76,13 +83,13 @@ export default function HomePage() {
           <InvoiceForm workers={workers} onChange={handleInvoiceChange} />
         </div>
         <div className="space-y-4">
-          <InvoicePreview worker={selectedWorker} invoice={invoice} grossTotal={grossTotal} />
+          <InvoicePreview worker={selectedWorker} invoice={invoice} grossTotal={grossTotal} signature={signature} />
           <div className="card p-4 flex items-center justify-between">
             <div>
               <p className="section-title">Eksport</p>
               <p className="font-semibold text-primary">Pobierz gotowy PDF</p>
             </div>
-            <PDFGenerator worker={selectedWorker} invoice={invoice} grossTotal={grossTotal} />
+            <PDFGenerator worker={selectedWorker} invoice={invoice} grossTotal={grossTotal} signature={signature} />
           </div>
           <div className="card p-4 space-y-3">
             <p className="section-title">Przydatne wskazówki</p>

@@ -28,4 +28,11 @@ export type CompanyInfo = {
   addressLine1: string;
   addressLine2: string;
   city?: string;
+  signerName?: string;
+};
+
+export type SignatureInfo = {
+  signerName: string;
+  signatureId: string;
+  signedAtISO: string;
 };
