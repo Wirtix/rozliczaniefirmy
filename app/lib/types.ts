@@ -9,8 +9,6 @@ export type Worker = {
 
 export type InvoiceInput = {
   workerId: string;
-  hours: number | null;
-  rate: number | null;
   grossAmount: number | null;
   period: string;
   periodMode: "month" | "custom";

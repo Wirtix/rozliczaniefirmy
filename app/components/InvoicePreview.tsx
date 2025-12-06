@@ -112,7 +112,12 @@ export function InvoicePreview({ worker, invoice, grossTotal, signature, classNa
               {signature ? (
                 <>
                   <p>Przez: {signature.signerName}</p>
-                  <p className="break-words text-[10px]">ID podpisu: {signatureIdWrapped}</p>
+                  <p className="text-[10px] leading-tight text-slate-700">
+                    <span className="font-semibold text-slate-800">ID podpisu:</span>{" "}
+                    <span className="inline-block max-w-full break-all rounded bg-white/70 px-1 py-[2px] font-mono text-[9px] leading-snug text-slate-900 ring-1 ring-slate-200">
+                      {signatureIdWrapped}
+                    </span>
+                  </p>
                   <p>Data: {signedAt}</p>
                 </>
               ) : (

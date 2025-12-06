@@ -25,8 +25,6 @@ export default function HomePage() {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [invoice, setInvoice] = useState<InvoiceInput>({
     workerId: "",
-    hours: null,
-    rate: null,
     grossAmount: null,
     period: "",
     periodMode: "month",
@@ -36,7 +34,7 @@ export default function HomePage() {
     description: "",
     issueDate: new Date().toISOString().slice(0, 10),
     invoiceNumber: "",
-    logoDataUrl: null,
+    logoDataUrl: "/branding/logo-placeholder.svg",
   });
   const [grossTotal, setGrossTotal] = useState(0);
   const [signature, setSignature] = useState<SignatureInfo | null>(null);
@@ -62,54 +60,50 @@ export default function HomePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="section-title">Wystaw rachunek</p>
-          <h2 className="text-2xl font-semibold text-primary">Generator rachunków do umowy zlecenie</h2>
-          <p className="text-slate-600 max-w-2xl mt-1">
-            Uzupełnij dane pracownika oraz okres zlecenia, aby wygenerować rachunek i pobrać go jako PDF z układem odpowiadającym klasycznym formularzom.
-          </p>
-        </div>
-        <Link
-          href="/workers"
-          className="px-4 py-2 rounded-lg border border-slate-200 bg-white text-sm font-medium hover:bg-slate-50"
-        >
-          Zarządzaj pracownikami
-        </Link>
-      </div>
-
-      <div className="grid lg:grid-cols-[420px_minmax(0,1fr)] gap-4 items-start">
-        <div className="space-y-4 lg:max-w-[420px] w-full">
-          <InvoiceForm workers={workers} onChange={handleInvoiceChange} />
-          <div className="card p-4 space-y-3">
-            <p className="section-title">Przydatne wskazówki</p>
-            <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
-              <li>Pracownicy są zapisywani w localStorage i dostępni tylko lokalnie.</li>
-              <li>Kwota brutto może być wyliczona z godzin i stawki lub wpisana ręcznie.</li>
-              <li>Numer rachunku generowany jest automatycznie i rośnie przy kolejnych dokumentach.</li>
-            </ul>
+      <div className="sticky top-0 z-20 -mx-4 mb-2 border-b border-amber-100 bg-gradient-to-r from-white via-amber-50/80 to-sky-50/80 px-4 py-3 shadow-sm backdrop-blur">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="section-title text-amber-700">Wystaw rachunek</p>
+            <h2 className="text-2xl font-semibold text-primary">Generator rachunków do umowy zlecenie</h2>
+            <p className="mt-1 max-w-2xl text-slate-700">
+              Uzupełnij dane pracownika oraz okres zlecenia, aby wygenerować rachunek i pobrać go jako PDF z układem odpowiadającym klasycznym formularzom.
+            </p>
           </div>
-        </div>
-        <div className="space-y-4">
-          <div className="card p-4 flex items-center justify-between">
-            <div>
-              <p className="section-title">Eksport</p>
-              <p className="font-semibold text-primary">Pobierz gotowy PDF</p>
-            </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/workers"
+              className="rounded-lg border border-amber-200 bg-amber-100/70 px-4 py-2 text-sm font-semibold text-amber-900 shadow-sm transition hover:bg-amber-200"
+            >
+              Zarządzaj pracownikami
+            </Link>
             <PDFGenerator worker={selectedWorker} invoice={invoice} grossTotal={grossTotal} signature={signature} />
           </div>
         </div>
       </div>
 
-      <div className="space-y-3">
-        <p className="section-title">Podgląd PDF (pełna szerokość A4)</p>
-        <InvoicePreview
-          worker={selectedWorker}
-          invoice={invoice}
-          grossTotal={grossTotal}
-          signature={signature}
-          className="w-full max-w-[900px] mx-auto"
-        />
+      <div className="mx-auto max-w-6xl space-y-6">
+        <div className="space-y-4">
+          <InvoiceForm workers={workers} onChange={handleInvoiceChange} />
+          <div className="rounded-xl border border-cyan-100 bg-gradient-to-r from-cyan-50 via-white to-emerald-50 p-4 shadow-sm">
+            <p className="section-title text-cyan-700">Przydatne wskazówki</p>
+            <ul className="list-disc list-inside space-y-1 text-sm text-cyan-900">
+              <li>Pracownicy są zapisywani w localStorage i dostępni tylko lokalnie.</li>
+              <li>Kwotę brutto wpisz bezpośrednio – pola godzin i stawki zostały uproszczone.</li>
+              <li>Numer rachunku generowany jest automatycznie i rośnie przy kolejnych dokumentach.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <p className="section-title">Podgląd PDF (pełna szerokość A4)</p>
+          <InvoicePreview
+            worker={selectedWorker}
+            invoice={invoice}
+            grossTotal={grossTotal}
+            signature={signature}
+            className="mx-auto w-full max-w-[900px]"
+          />
+        </div>
       </div>
     </div>
   );

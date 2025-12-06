@@ -1,0 +1,14 @@
+<svg width="320" height="120" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder logo">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.35" />
+    </linearGradient>
+  </defs>
+  <rect width="320" height="120" rx="18" fill="url(#grad)" />
+  <circle cx="60" cy="60" r="26" fill="#0EA5E9" opacity="0.15" />
+  <circle cx="260" cy="60" r="26" fill="#7C3AED" opacity="0.15" />
+  <path d="M90 80 L130 40 L170 80" fill="none" stroke="#0EA5E9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M150 80 L190 40 L230 80" fill="none" stroke="#7C3AED" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+  <text x="160" y="92" text-anchor="middle" font-family="'Inter', system-ui, sans-serif" font-size="16" fill="#0F172A" opacity="0.75">Twoje logo tutaj</text>
+</svg>
