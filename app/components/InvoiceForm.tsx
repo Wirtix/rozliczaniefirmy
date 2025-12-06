@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { nextInvoiceNumber, loadLogo, persistLogo } from "../lib/storage";
+import { nextInvoiceNumber } from "../lib/storage";
 import { customRangeLabel, formatCurrency, monthRangeLabel } from "../lib/format";
 import { InvoiceInput, Worker } from "../lib/types";
 
@@ -50,13 +50,6 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
     onChange(invoice, grossValue);
   }, [invoice, grossValue, onChange]);
 
-  useEffect(() => {
-    const savedLogo = loadLogo();
-    if (savedLogo) {
-      setInvoice((prev) => ({ ...prev, logoDataUrl: savedLogo }));
-    }
-  }, []);
-
   const handleChange = (field: keyof InvoiceInput, value: string) => {
     if (field === "grossAmount") {
       setInvoice((prev) => ({ ...prev, [field]: value ? Number(value) : null }));
@@ -85,219 +78,190 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
     });
   };
 
-  const handleLogoUpload = (file: File | null) => {
-    if (!file) {
-      setInvoice((prev) => ({ ...prev, logoDataUrl: bundledLogoPath }));
-      persistLogo(null);
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = typeof reader.result === "string" ? reader.result : null;
-      setInvoice((prev) => ({ ...prev, logoDataUrl: result }));
-      persistLogo(result);
-    };
-    reader.readAsDataURL(file);
-  };
-
   return (
-    <div className="card p-5 space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="section-title">Dane rachunku</p>
-          <h2 className="text-lg font-semibold text-primary">Formularz generowania</h2>
-        </div>
-        <div className="rounded-xl bg-primary/10 px-4 py-3 text-right text-sm text-primary shadow-inner">
-          <p className="text-xs uppercase tracking-wide text-primary/80">Kwota brutto</p>
-          <p className="text-2xl font-bold leading-tight">{formatCurrency(grossValue)}</p>
-        </div>
-      </div>
+    <div className="relative overflow-hidden rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-sky-50 p-5 shadow-lg shadow-amber-100/70">
+      <div className="pointer-events-none absolute -right-12 -top-10 h-44 w-44 rounded-full bg-cyan-200/50 blur-3xl" />
+      <div className="pointer-events-none absolute -left-10 bottom-0 h-36 w-36 rounded-full bg-pink-200/50 blur-3xl" />
 
-      <div className="rounded-2xl border border-slate-100 bg-gradient-to-r from-indigo-50 via-white to-sky-50 p-4 shadow-inner space-y-4">
-        <div className="grid gap-3 xl:grid-cols-[1.1fr_1.5fr_1fr]">
-          <div className="flex flex-col gap-2 rounded-xl border border-white/70 bg-white/80 p-3 shadow-sm">
-            <div className="flex items-center justify-between">
-              <p className="field-label">Pracownik</p>
-              <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">profil</span>
-            </div>
-            <select
-              value={invoice.workerId}
-              onChange={(e) => handleChange("workerId", e.target.value)}
-              className="field-input bg-white/80 ring-1 ring-white"
-            >
-              {workers.length === 0 && <option>Brak pracowników</option>}
-              {workers.map((worker) => (
-                <option key={worker.id} value={worker.id}>
-                  {worker.fullName}
-                </option>
-              ))}
-            </select>
-            <p className="text-xs text-slate-500">Wybierz osobę z zapisanej listy pracowników.</p>
+      <div className="relative space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl bg-gradient-to-r from-primary via-emerald-600 to-accent px-4 py-3 text-white shadow-lg shadow-emerald-200/30">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-white/70">Dane rachunku</p>
+            <h2 className="text-lg font-semibold">Formularz generowania</h2>
           </div>
+          <div className="rounded-xl bg-white/15 px-4 py-2 text-right shadow-inner shadow-primary/20 backdrop-blur">
+            <p className="text-[11px] uppercase tracking-[0.25em] text-white/80">Kwota brutto</p>
+            <p className="text-3xl font-bold leading-tight drop-shadow-sm">{formatCurrency(grossValue)}</p>
+          </div>
+        </div>
 
-          <div className="flex flex-col gap-2 rounded-xl border border-white/70 bg-white/80 p-3 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="field-label">Okres rozliczenia</p>
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary">{invoice.periodMode === "month" ? "Miesięczny" : "Własny zakres"}</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => handleMonthChange(invoice.periodMonth || currentMonth)}
-                className={`rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition ${
-                  invoice.periodMode === "month"
-                    ? "bg-primary text-white shadow"
-                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                }`}
-              >
-                Miesiąc
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setInvoice((prev) => ({
-                    ...prev,
-                    periodMode: "custom",
-                    period: customRangeLabel(prev.periodFrom, prev.periodTo),
-                  }))
-                }
-                className={`rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition ${
-                  invoice.periodMode === "custom"
-                    ? "bg-primary text-white shadow"
-                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                }`}
-              >
-                Własny zakres
-              </button>
-            </div>
-            {invoice.periodMode === "month" ? (
+        <div className="rounded-2xl border border-white/70 bg-white/90 p-4 shadow-xl shadow-amber-50">
+          <div className="grid gap-3 xl:grid-cols-[1.1fr_1.4fr_1fr]">
+            <div className="flex flex-col gap-2 rounded-xl border border-amber-100 bg-gradient-to-br from-amber-50 via-white to-amber-100/60 p-3 shadow-sm shadow-amber-100">
+              <div className="flex items-center justify-between">
+                <p className="field-label text-amber-900">Pracownik</p>
+                <span className="rounded-full bg-amber-200/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-900">profil</span>
+              </div>
               <select
-                value={invoice.periodMonth}
-                onChange={(e) => handleMonthChange(e.target.value)}
-                className="field-input bg-white/80 ring-1 ring-white"
+                value={invoice.workerId}
+                onChange={(e) => handleChange("workerId", e.target.value)}
+                className="field-input bg-white/80 ring-1 ring-amber-100"
               >
-                {monthOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
+                {workers.length === 0 && <option>Brak pracowników</option>}
+                {workers.map((worker) => (
+                  <option key={worker.id} value={worker.id}>
+                    {worker.fullName}
                   </option>
                 ))}
               </select>
-            ) : (
-              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                <input
-                  type="date"
-                  value={invoice.periodFrom || ""}
-                  onChange={(e) => handleCustomDateChange("periodFrom", e.target.value)}
-                  className="field-input bg-white/80 ring-1 ring-white"
-                />
-                <input
-                  type="date"
-                  value={invoice.periodTo || ""}
-                  onChange={(e) => handleCustomDateChange("periodTo", e.target.value)}
-                  className="field-input bg-white/80 ring-1 ring-white"
-                />
-              </div>
-            )}
-          </div>
+              <p className="text-xs text-amber-700">Wybierz osobę z zapisanej listy pracowników.</p>
+            </div>
 
-          <div className="grid gap-3 rounded-xl border border-white/70 bg-white/80 p-3 shadow-sm">
-            <div className="space-y-1">
-              <label className="field-label flex items-center justify-between">
-                Numer rachunku
+            <div className="flex flex-col gap-2 rounded-xl border border-cyan-100 bg-gradient-to-br from-cyan-50 via-white to-cyan-100/60 p-3 shadow-sm shadow-cyan-100">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="field-label text-cyan-900">Okres rozliczenia</p>
+                <span className="rounded-full bg-cyan-600 px-3 py-1 text-[11px] font-semibold text-white shadow-md shadow-cyan-200">{invoice.periodMode === "month" ? "Miesięczny" : "Własny zakres"}</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
-                  className="text-xs font-semibold text-accent underline"
-                  onClick={() => setInvoice((prev) => ({ ...prev, invoiceNumber: nextInvoiceNumber() }))}
+                  onClick={() => handleMonthChange(invoice.periodMonth || currentMonth)}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold shadow-md shadow-amber-200 transition ${
+                    invoice.periodMode === "month"
+                      ? "bg-amber-500 text-white"
+                      : "bg-amber-100 text-amber-800 hover:bg-amber-200"
+                  }`}
                 >
-                  Generuj
+                  Miesiąc
                 </button>
-              </label>
-              <input
-                value={invoice.invoiceNumber}
-                onChange={(e) => handleChange("invoiceNumber", e.target.value)}
-                className="field-input bg-white/80 ring-1 ring-white"
-                placeholder="R/2025/0001"
-              />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setInvoice((prev) => ({
+                      ...prev,
+                      periodMode: "custom",
+                      period: customRangeLabel(prev.periodFrom, prev.periodTo),
+                    }))
+                  }
+                  className={`rounded-full px-4 py-2 text-sm font-semibold shadow-md shadow-cyan-200 transition ${
+                    invoice.periodMode === "custom"
+                      ? "bg-cyan-600 text-white"
+                      : "bg-cyan-100 text-cyan-900 hover:bg-cyan-200"
+                  }`}
+                >
+                  Własny zakres
+                </button>
+              </div>
+              {invoice.periodMode === "month" ? (
+                <select
+                  value={invoice.periodMonth}
+                  onChange={(e) => handleMonthChange(e.target.value)}
+                  className="field-input bg-white/80 ring-1 ring-cyan-100"
+                >
+                  {monthOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                  <input
+                    type="date"
+                    value={invoice.periodFrom || ""}
+                    onChange={(e) => handleCustomDateChange("periodFrom", e.target.value)}
+                    className="field-input bg-white/80 ring-1 ring-cyan-100"
+                  />
+                  <input
+                    type="date"
+                    value={invoice.periodTo || ""}
+                    onChange={(e) => handleCustomDateChange("periodTo", e.target.value)}
+                    className="field-input bg-white/80 ring-1 ring-cyan-100"
+                  />
+                </div>
+              )}
             </div>
-            <div className="space-y-1">
-              <label className="field-label">Data wystawienia</label>
+
+            <div className="grid gap-3 rounded-xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-emerald-100/60 p-3 shadow-sm shadow-emerald-100">
+              <div className="space-y-1">
+                <label className="field-label flex items-center justify-between text-emerald-900">
+                  Numer rachunku
+                  <button
+                    type="button"
+                    className="text-xs font-semibold text-emerald-700 underline"
+                    onClick={() => setInvoice((prev) => ({ ...prev, invoiceNumber: nextInvoiceNumber() }))}
+                  >
+                    Generuj
+                  </button>
+                </label>
+                <input
+                  value={invoice.invoiceNumber}
+                  onChange={(e) => handleChange("invoiceNumber", e.target.value)}
+                  className="field-input bg-white/80 ring-1 ring-emerald-100"
+                  placeholder="R/2025/0001"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="field-label text-emerald-900">Data wystawienia</label>
+                <input
+                  type="date"
+                  value={invoice.issueDate}
+                  onChange={(e) => handleChange("issueDate", e.target.value)}
+                  className="field-input bg-white/80 ring-1 ring-emerald-100"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.4fr_1fr]">
+            <div className="rounded-xl border border-fuchsia-100 bg-gradient-to-br from-fuchsia-50 via-white to-fuchsia-100/60 p-3 shadow-sm shadow-fuchsia-100">
+              <label className="field-label text-fuchsia-900">Kwota brutto</label>
               <input
-                type="date"
-                value={invoice.issueDate}
-                onChange={(e) => handleChange("issueDate", e.target.value)}
-                className="field-input bg-white/80 ring-1 ring-white"
+                type="number"
+                min="0"
+                step="0.01"
+                value={invoice.grossAmount ?? ""}
+                onChange={(e) => handleChange("grossAmount", e.target.value)}
+                className="field-input bg-white/80 ring-1 ring-fuchsia-100"
+                placeholder="np. 3200"
               />
+              <p className="mt-2 text-xs text-fuchsia-800">
+                Pole godzin i stawek zostało usunięte – wpisz bezpośrednio pełną kwotę brutto za zlecenie.
+              </p>
+            </div>
+            <div className="rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-indigo-100/60 p-3 shadow-sm shadow-indigo-100">
+              <p className="field-label text-indigo-900">Aktualny zakres</p>
+              <p className="mt-2 rounded-lg border border-dashed border-indigo-100 bg-indigo-50/70 px-3 py-2 text-sm font-semibold text-indigo-900">
+                {invoice.period || "uzupełnij daty"}
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.4fr_1fr]">
-          <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
-            <label className="field-label">Kwota brutto</label>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={invoice.grossAmount ?? ""}
-              onChange={(e) => handleChange("grossAmount", e.target.value)}
-              className="field-input bg-white"
-              placeholder="np. 3200"
+        <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr]">
+          <div className="space-y-2 rounded-xl border border-primary/10 bg-white/90 p-4 shadow-md shadow-primary/5">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-primary" />
+              <label className="field-label text-primary">Uwagi / opis</label>
+            </div>
+            <textarea
+              value={invoice.description || ""}
+              onChange={(e) => handleChange("description", e.target.value)}
+              className="field-input min-h-[90px] rounded-xl bg-white/80 ring-1 ring-primary/10"
+              placeholder="Dodatkowe informacje do rachunku"
             />
-            <p className="mt-2 text-xs text-slate-500">
-              Pole godzin i stawek zostało usunięte – wpisz bezpośrednio pełną kwotę brutto za zlecenie.
-            </p>
+            <p className="text-xs text-primary/70">Opis pojawi się w wydruku PDF.</p>
           </div>
-          <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
-            <p className="field-label">Aktualny zakres</p>
-            <p className="mt-2 rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700">
-              {invoice.period || "uzupełnij daty"}
-            </p>
-          </div>
-        </div>
-      </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-        <div className="space-y-2">
-          <label className="field-label">Uwagi / opis</label>
-          <textarea
-            value={invoice.description || ""}
-            onChange={(e) => handleChange("description", e.target.value)}
-            className="field-input min-h-[90px] rounded-xl"
-            placeholder="Dodatkowe informacje do rachunku"
-          />
-        </div>
-
-        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <p className="field-label">Logo firmy (opcjonalnie)</p>
-            {invoice.logoDataUrl && <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">dodano</span>}
-          </div>
-          <p className="text-xs text-slate-500">Dodaj znak graficzny, który pojawi się w PDF.</p>
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleLogoUpload(e.target.files?.[0] || null)}
-              className="text-sm text-slate-600"
-            />
-            {invoice.logoDataUrl && (
-              <button
-                type="button"
-                onClick={() => handleLogoUpload(null)}
-                className="text-xs font-semibold text-red-500 underline"
-              >
-                Usuń logo
-              </button>
-            )}
-          </div>
-          <div className="mt-3 rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
-            <p>
-              Domyślny plik logo możesz podmienić w katalogu projektu pod ścieżką
-              <span className="mx-1 rounded bg-white px-1 font-semibold text-slate-800">public/branding/logo-placeholder.svg</span>.
+          <div className="rounded-xl border border-lime-100 bg-gradient-to-br from-lime-50 via-white to-lime-100/60 p-4 shadow-md shadow-lime-100">
+            <p className="field-label text-lime-900">Logo firmy</p>
+            <p className="mt-1 text-sm text-lime-800">
+              Logo jest już osadzone w plikach projektu i zostanie automatycznie dodane do PDF.
             </p>
-            <p className="mt-1 text-[11px] text-slate-500">Wystarczy wgrać tam własny plik, aby pojawił się w podglądzie i PDF.</p>
+            <p className="mt-2 rounded-lg bg-white/70 px-3 py-2 text-xs font-semibold text-lime-900 shadow-inner shadow-lime-100">
+              Jeśli podmienisz plik w <span className="font-mono">public/branding/logo-placeholder.svg</span>, nowa wersja pokaże się w podglądzie.
+            </p>
           </div>
-          {invoice.logoDataUrl && <p className="mt-2 text-xs text-green-700">Logo będzie dołączone do PDF i podglądu.</p>}
         </div>
       </div>
     </div>

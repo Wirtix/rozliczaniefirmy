@@ -60,19 +60,19 @@ export default function HomePage() {
 
   return (
     <div className="space-y-6">
-      <div className="sticky top-0 z-20 -mx-4 mb-2 border-b border-slate-100 bg-white/90 px-4 py-3 backdrop-blur">
+      <div className="sticky top-0 z-20 -mx-4 mb-2 border-b border-amber-100 bg-gradient-to-r from-white via-amber-50/80 to-sky-50/80 px-4 py-3 shadow-sm backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="section-title">Wystaw rachunek</p>
+            <p className="section-title text-amber-700">Wystaw rachunek</p>
             <h2 className="text-2xl font-semibold text-primary">Generator rachunków do umowy zlecenie</h2>
-            <p className="mt-1 max-w-2xl text-slate-600">
+            <p className="mt-1 max-w-2xl text-slate-700">
               Uzupełnij dane pracownika oraz okres zlecenia, aby wygenerować rachunek i pobrać go jako PDF z układem odpowiadającym klasycznym formularzom.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/workers"
-              className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition hover:bg-slate-50"
+              className="rounded-lg border border-amber-200 bg-amber-100/70 px-4 py-2 text-sm font-semibold text-amber-900 shadow-sm transition hover:bg-amber-200"
             >
               Zarządzaj pracownikami
             </Link>
@@ -84,9 +84,9 @@ export default function HomePage() {
       <div className="mx-auto max-w-6xl space-y-6">
         <div className="space-y-4">
           <InvoiceForm workers={workers} onChange={handleInvoiceChange} />
-          <div className="card p-4 space-y-3">
-            <p className="section-title">Przydatne wskazówki</p>
-            <ul className="list-disc list-inside space-y-1 text-sm text-slate-600">
+          <div className="rounded-xl border border-cyan-100 bg-gradient-to-r from-cyan-50 via-white to-emerald-50 p-4 shadow-sm">
+            <p className="section-title text-cyan-700">Przydatne wskazówki</p>
+            <ul className="list-disc list-inside space-y-1 text-sm text-cyan-900">
               <li>Pracownicy są zapisywani w localStorage i dostępni tylko lokalnie.</li>
               <li>Kwotę brutto wpisz bezpośrednio – pola godzin i stawki zostały uproszczone.</li>
               <li>Numer rachunku generowany jest automatycznie i rośnie przy kolejnych dokumentach.</li>
