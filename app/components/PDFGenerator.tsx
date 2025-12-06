@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8fafc",
   },
   signatureLabel: { fontSize: 10, fontWeight: "bold", marginBottom: 2 },
-  signatureMeta: { fontSize: 9, lineHeight: 1.4, wordBreak: "break-word" },
-  signatureId: { fontSize: 8, wordBreak: "break-word" },
+  signatureMeta: { fontSize: 9, lineHeight: 1.4, wordBreak: "break-all" },
+  signatureId: { fontSize: 8, wordBreak: "break-all" },
 });
 
 export function InvoiceDocument({
