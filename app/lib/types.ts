@@ -34,3 +34,12 @@ export type SignatureInfo = {
   signatureId: string;
   signedAtISO: string;
 };
+
+export type InvoiceRecord = {
+  id: string;
+  createdAt: string;
+  invoice: InvoiceInput;
+  worker?: Worker;
+  grossTotal: number;
+  signature: SignatureInfo;
+};

@@ -1,8 +1,9 @@
 "use client";
 
-import { Document, Font, Image, Page, PDFDownloadLink, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { BlobProvider, Document, Font, Image, Page, PDFDownloadLink, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { COMPANY_INFO } from "../lib/company";
 import { amountToWords, formatCurrency, formatDateTime, wrapSignatureId } from "../lib/format";
+import { persistInvoiceRecord } from "../lib/storage";
 import { InvoiceInput, SignatureInfo, Worker } from "../lib/types";
 
 // Avoid double registration during Fast Refresh
@@ -29,6 +30,13 @@ function ensureFontRegistered() {
   });
 
   fontRegistered = true;
+}
+
+function createRecordId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `inv-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 const styles = StyleSheet.create({
@@ -68,7 +76,7 @@ const styles = StyleSheet.create({
   signatureMeta: { fontSize: 9, lineHeight: 1.4 },
 });
 
-function InvoiceDocument({
+export function InvoiceDocument({
   worker,
   invoice,
   grossTotal,
@@ -203,6 +211,18 @@ export function PDFGenerator({
   grossTotal: number;
   signature: SignatureInfo | null;
 }) {
+  const handleSave = () => {
+    if (!signature) return;
+    persistInvoiceRecord({
+      id: createRecordId(),
+      createdAt: new Date().toISOString(),
+      invoice,
+      worker,
+      grossTotal,
+      signature,
+    });
+  };
+
   if (!signature) {
     return (
       <button
@@ -219,6 +239,7 @@ export function PDFGenerator({
       document={<InvoiceDocument worker={worker} invoice={invoice} grossTotal={grossTotal} signature={signature} />}
       fileName={`${invoice.invoiceNumber || "rachunek"}.pdf`}
       className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-white font-semibold shadow-sm hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed"
+      onClick={handleSave}
     >
       {({ loading, error }) => {
         if (error) return "Błąd generowania";
@@ -226,5 +247,57 @@ export function PDFGenerator({
         return "Pobierz PDF";
       }}
     </PDFDownloadLink>
+  );
+}
+
+export function PDFPreview({
+  worker,
+  invoice,
+  grossTotal,
+  signature,
+}: {
+  worker?: Worker;
+  invoice: InvoiceInput;
+  grossTotal: number;
+  signature: SignatureInfo | null;
+}) {
+  if (!signature) {
+    return (
+      <div className="card p-6 text-sm text-slate-700">
+        <p>Trwa przygotowywanie podpisu do podglądu PDF...</p>
+      </div>
+    );
+  }
+
+  return (
+    <BlobProvider document={<InvoiceDocument worker={worker} invoice={invoice} grossTotal={grossTotal} signature={signature} />}>
+      {({ url, loading, error }) => {
+        if (error) {
+          return (
+            <div className="card p-6 text-sm text-red-700">
+              <p>Nie udało się przygotować podglądu PDF.</p>
+            </div>
+          );
+        }
+
+        if (loading || !url) {
+          return (
+            <div className="card p-6 text-sm text-slate-700">
+              <p>Ładowanie podglądu PDF...</p>
+            </div>
+          );
+        }
+
+        return (
+          <div className="card overflow-hidden border border-slate-200 bg-white shadow-sm">
+            <iframe
+              src={url}
+              title="Podgląd wygenerowanego PDF"
+              className="h-[1100px] w-full border-0"
+            />
+          </div>
+        );
+      }}
+    </BlobProvider>
   );
 }

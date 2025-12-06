@@ -29,6 +29,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   Wystaw rachunek
                 </Link>
                 <Link
+                  href="/invoices"
+                  className="px-3 py-2 rounded-md hover:bg-slate-100 transition-colors text-slate-700"
+                >
+                  Lista rachunków
+                </Link>
+                <Link
                   href="/workers"
                   className="px-3 py-2 rounded-md hover:bg-slate-100 transition-colors text-slate-700"
                 >
