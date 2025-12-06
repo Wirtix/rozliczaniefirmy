@@ -25,8 +25,6 @@ export default function HomePage() {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [invoice, setInvoice] = useState<InvoiceInput>({
     workerId: "",
-    hours: null,
-    rate: null,
     grossAmount: null,
     period: "",
     periodMode: "month",
@@ -36,7 +34,7 @@ export default function HomePage() {
     description: "",
     issueDate: new Date().toISOString().slice(0, 10),
     invoiceNumber: "",
-    logoDataUrl: null,
+    logoDataUrl: "/branding/logo-placeholder.svg",
   });
   const [grossTotal, setGrossTotal] = useState(0);
   const [signature, setSignature] = useState<SignatureInfo | null>(null);
@@ -90,7 +88,7 @@ export default function HomePage() {
             <p className="section-title">Przydatne wskazówki</p>
             <ul className="list-disc list-inside space-y-1 text-sm text-slate-600">
               <li>Pracownicy są zapisywani w localStorage i dostępni tylko lokalnie.</li>
-              <li>Kwota brutto może być wyliczona z godzin i stawki lub wpisana ręcznie.</li>
+              <li>Kwotę brutto wpisz bezpośrednio – pola godzin i stawki zostały uproszczone.</li>
               <li>Numer rachunku generowany jest automatycznie i rośnie przy kolejnych dokumentach.</li>
             </ul>
           </div>

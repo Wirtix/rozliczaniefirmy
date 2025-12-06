@@ -12,6 +12,7 @@ export type InvoiceFormProps = {
 
 const today = new Date().toISOString().slice(0, 10);
 const currentMonth = new Date().toISOString().slice(0, 7);
+const bundledLogoPath = "/branding/logo-placeholder.svg";
 
 const monthOptions = Array.from({ length: 12 }).map((_, index) => {
   const date = new Date();
@@ -24,8 +25,6 @@ const monthOptions = Array.from({ length: 12 }).map((_, index) => {
 export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
   const [invoice, setInvoice] = useState<InvoiceInput>({
     workerId: workers[0]?.id || "",
-    hours: null,
-    rate: null,
     grossAmount: null,
     period: monthRangeLabel(currentMonth).range,
     periodMode: "month",
@@ -35,7 +34,7 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
     description: "",
     issueDate: today,
     invoiceNumber: nextInvoiceNumber(),
-    logoDataUrl: null,
+    logoDataUrl: bundledLogoPath,
   });
 
   useEffect(() => {
@@ -44,9 +43,8 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
 
   const grossValue = useMemo(() => {
     if (invoice.grossAmount && invoice.grossAmount > 0) return invoice.grossAmount;
-    if (invoice.hours && invoice.rate) return invoice.hours * invoice.rate;
     return 0;
-  }, [invoice.grossAmount, invoice.hours, invoice.rate]);
+  }, [invoice.grossAmount]);
 
   useEffect(() => {
     onChange(invoice, grossValue);
@@ -60,7 +58,7 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
   }, []);
 
   const handleChange = (field: keyof InvoiceInput, value: string) => {
-    if (field === "hours" || field === "rate" || field === "grossAmount") {
+    if (field === "grossAmount") {
       setInvoice((prev) => ({ ...prev, [field]: value ? Number(value) : null }));
     } else {
       setInvoice((prev) => ({ ...prev, [field]: value }));
@@ -89,7 +87,7 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
 
   const handleLogoUpload = (file: File | null) => {
     if (!file) {
-      setInvoice((prev) => ({ ...prev, logoDataUrl: null }));
+      setInvoice((prev) => ({ ...prev, logoDataUrl: bundledLogoPath }));
       persistLogo(null);
       return;
     }
@@ -233,33 +231,9 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
           </div>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.4fr_1fr]">
           <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
-            <label className="field-label">Liczba godzin</label>
-            <input
-              type="number"
-              min="0"
-              step="0.5"
-              value={invoice.hours ?? ""}
-              onChange={(e) => handleChange("hours", e.target.value)}
-              className="field-input bg-white"
-              placeholder="np. 40"
-            />
-          </div>
-          <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
-            <label className="field-label">Stawka brutto (zł)</label>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={invoice.rate ?? ""}
-              onChange={(e) => handleChange("rate", e.target.value)}
-              className="field-input bg-white"
-              placeholder="np. 80"
-            />
-          </div>
-          <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
-            <label className="field-label">Kwota brutto (opcjonalnie)</label>
+            <label className="field-label">Kwota brutto</label>
             <input
               type="number"
               min="0"
@@ -269,6 +243,9 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
               className="field-input bg-white"
               placeholder="np. 3200"
             />
+            <p className="mt-2 text-xs text-slate-500">
+              Pole godzin i stawek zostało usunięte – wpisz bezpośrednio pełną kwotę brutto za zlecenie.
+            </p>
           </div>
           <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
             <p className="field-label">Aktualny zakres</p>
@@ -312,6 +289,13 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
                 Usuń logo
               </button>
             )}
+          </div>
+          <div className="mt-3 rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
+            <p>
+              Domyślny plik logo możesz podmienić w katalogu projektu pod ścieżką
+              <span className="mx-1 rounded bg-white px-1 font-semibold text-slate-800">public/branding/logo-placeholder.svg</span>.
+            </p>
+            <p className="mt-1 text-[11px] text-slate-500">Wystarczy wgrać tam własny plik, aby pojawił się w podglądzie i PDF.</p>
           </div>
           {invoice.logoDataUrl && <p className="mt-2 text-xs text-green-700">Logo będzie dołączone do PDF i podglądu.</p>}
         </div>
