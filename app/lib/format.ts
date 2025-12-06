@@ -161,3 +161,8 @@ export function formatDateTime(date: Date) {
   const minutes = pad(date.getMinutes());
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
+
+export function wrapSignatureId(id: string): string {
+  // Insert zero-width break hints after hyphens to allow wrapping in narrow containers/PDF boxes
+  return id.replace(/-/g, "-\u200b");
+}

@@ -78,19 +78,9 @@ export default function HomePage() {
         </Link>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4 items-start">
-        <div className="lg:col-span-2">
+      <div className="grid lg:grid-cols-[420px_minmax(0,1fr)] gap-4 items-start">
+        <div className="space-y-4 lg:max-w-[420px] w-full">
           <InvoiceForm workers={workers} onChange={handleInvoiceChange} />
-        </div>
-        <div className="space-y-4">
-          <InvoicePreview worker={selectedWorker} invoice={invoice} grossTotal={grossTotal} signature={signature} />
-          <div className="card p-4 flex items-center justify-between">
-            <div>
-              <p className="section-title">Eksport</p>
-              <p className="font-semibold text-primary">Pobierz gotowy PDF</p>
-            </div>
-            <PDFGenerator worker={selectedWorker} invoice={invoice} grossTotal={grossTotal} signature={signature} />
-          </div>
           <div className="card p-4 space-y-3">
             <p className="section-title">Przydatne wskazówki</p>
             <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
@@ -100,6 +90,26 @@ export default function HomePage() {
             </ul>
           </div>
         </div>
+        <div className="space-y-4">
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <p className="section-title">Eksport</p>
+              <p className="font-semibold text-primary">Pobierz gotowy PDF</p>
+            </div>
+            <PDFGenerator worker={selectedWorker} invoice={invoice} grossTotal={grossTotal} signature={signature} />
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <p className="section-title">Podgląd PDF (pełna szerokość A4)</p>
+        <InvoicePreview
+          worker={selectedWorker}
+          invoice={invoice}
+          grossTotal={grossTotal}
+          signature={signature}
+          className="w-full max-w-[900px] mx-auto"
+        />
       </div>
     </div>
   );

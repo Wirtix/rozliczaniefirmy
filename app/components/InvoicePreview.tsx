@@ -1,7 +1,8 @@
 "use client";
 
+import clsx from "clsx";
 import { COMPANY_INFO } from "../lib/company";
-import { amountToWords, formatCurrency, formatDateTime } from "../lib/format";
+import { amountToWords, formatCurrency, formatDateTime, wrapSignatureId } from "../lib/format";
 import { InvoiceInput, SignatureInfo, Worker } from "../lib/types";
 
 export type InvoicePreviewProps = {
@@ -9,15 +10,17 @@ export type InvoicePreviewProps = {
   invoice: InvoiceInput;
   grossTotal: number;
   signature: SignatureInfo | null;
+  className?: string;
 };
 
-export function InvoicePreview({ worker, invoice, grossTotal, signature }: InvoicePreviewProps) {
+export function InvoicePreview({ worker, invoice, grossTotal, signature, className }: InvoicePreviewProps) {
   const words = amountToWords(grossTotal || 0);
   const city = COMPANY_INFO.city || COMPANY_INFO.addressLine2;
   const signedAt = signature ? formatDateTime(new Date(signature.signedAtISO)) : "";
+  const signatureIdWrapped = signature ? wrapSignatureId(signature.signatureId) : "";
 
   return (
-    <div className="card p-6 space-y-6">
+    <div className={clsx("card p-6 space-y-6 max-w-[820px] mx-auto", className)}>
       <div className="flex justify-between items-start text-sm text-slate-600">
         {invoice.logoDataUrl ? (
           <img src={invoice.logoDataUrl} alt="Logo firmy" className="h-12 w-auto object-contain" />
@@ -109,7 +112,7 @@ export function InvoicePreview({ worker, invoice, grossTotal, signature }: Invoi
               {signature ? (
                 <>
                   <p>Przez: {signature.signerName}</p>
-                  <p>ID podpisu: {signature.signatureId}</p>
+                  <p className="break-words text-[10px]">ID podpisu: {signatureIdWrapped}</p>
                   <p>Data: {signedAt}</p>
                 </>
               ) : (

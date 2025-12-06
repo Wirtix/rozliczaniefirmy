@@ -2,7 +2,7 @@
 
 import { Document, Font, Image, Page, PDFDownloadLink, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { COMPANY_INFO } from "../lib/company";
-import { amountToWords, formatCurrency, formatDateTime } from "../lib/format";
+import { amountToWords, formatCurrency, formatDateTime, wrapSignatureId } from "../lib/format";
 import { InvoiceInput, SignatureInfo, Worker } from "../lib/types";
 
 // Avoid double registration during Fast Refresh
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8fafc",
   },
   signatureLabel: { fontSize: 10, fontWeight: "bold", marginBottom: 2 },
-  signatureMeta: { fontSize: 9 },
+  signatureMeta: { fontSize: 9, lineHeight: 1.4 },
 });
 
 function InvoiceDocument({
@@ -85,6 +85,7 @@ function InvoiceDocument({
   const issueDate = invoice.issueDate || "...............";
   const grossValue = formatCurrency(grossTotal);
   const signedAt = formatDateTime(new Date(signature.signedAtISO));
+  const signatureIdWrapped = wrapSignatureId(signature.signatureId);
 
   return (
     <Document>
@@ -172,12 +173,14 @@ function InvoiceDocument({
             <View style={styles.signLine} />
             <Text style={{ fontSize: 10 }}>Zleceniodawca</Text>
             <View style={styles.signatureStamp}>
-              <Text style={styles.signatureLabel}>Podpisano elektronicznie</Text>
-              <Text style={styles.signatureMeta}>Przez: {signature.signerName}</Text>
-              <Text style={styles.signatureMeta}>ID podpisu: {signature.signatureId}</Text>
-              <Text style={styles.signatureMeta}>Data: {signedAt}</Text>
-            </View>
+            <Text style={styles.signatureLabel}>Podpisano elektronicznie</Text>
+            <Text style={styles.signatureMeta}>Przez: {signature.signerName}</Text>
+            <Text style={[styles.signatureMeta, { fontSize: 8 }]} wrap>
+              ID podpisu: {signatureIdWrapped}
+            </Text>
+            <Text style={styles.signatureMeta}>Data: {signedAt}</Text>
           </View>
+        </View>
         </View>
 
         <View style={{ marginTop: 24 }}>
