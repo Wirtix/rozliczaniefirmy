@@ -3,6 +3,8 @@ export type Worker = {
   fullName: string;
   address: string;
   pesel: string;
+  contractNumber?: string;
+  contractDate?: string;
 };
 
 export type InvoiceInput = {

@@ -91,7 +91,8 @@ function InvoiceDocument({ worker, invoice, grossTotal }: { worker?: Worker; inv
 
         <View style={styles.block}>
           <Text style={styles.paragraph}>
-            za wykonanie prac zgodnie z umową nr: {invoice.invoiceNumber || "........"} w okresie od {invoice.period || "........"}
+            za wykonanie prac zgodnie z umową nr: {worker?.contractNumber || "........"} z dnia {worker?.contractDate || "......."} w okresie
+            od {invoice.period || "........"}
           </Text>
         </View>
 

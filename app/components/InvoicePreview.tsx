@@ -45,7 +45,8 @@ export function InvoicePreview({ worker, invoice, grossTotal }: InvoicePreviewPr
           <p>PESEL: {worker?.pesel || "................"}</p>
         </div>
         <p className="text-slate-700">
-          za wykonanie prac zgodnie z umową nr: {invoice.invoiceNumber || "........"} w okresie od {invoice.period || "........"}
+          za wykonanie prac zgodnie z umową nr: {worker?.contractNumber || "........"} z dnia {worker?.contractDate || "........"} w
+          okresie od {invoice.period || "........"}
         </p>
       </div>
 

@@ -50,6 +50,12 @@ export function WorkerList({ workers, onChange, onSelect }: WorkerListProps) {
                   <p className="font-semibold text-primary">{worker.fullName}</p>
                   <p className="text-sm text-slate-600 whitespace-pre-wrap">{worker.address}</p>
                   <p className="text-xs text-slate-500">PESEL: {worker.pesel}</p>
+                  {(worker.contractNumber || worker.contractDate) && (
+                    <p className="text-xs text-slate-500">
+                      Umowa: {worker.contractNumber || "-"}
+                      {worker.contractDate ? ` z dn. ${worker.contractDate}` : ""}
+                    </p>
+                  )}
                 </div>
                 <div className="flex flex-col gap-2 text-sm">
                   {onSelect ? (

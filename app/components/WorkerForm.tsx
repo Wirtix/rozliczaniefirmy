@@ -8,6 +8,8 @@ const empty: Worker = {
   fullName: "",
   address: "",
   pesel: "",
+  contractNumber: "",
+  contractDate: "",
 };
 
 export type WorkerFormProps = {
@@ -64,6 +66,26 @@ export function WorkerForm({ initial, onSubmit, onCancel }: WorkerFormProps) {
           className="field-input"
           placeholder="00000000000"
         />
+      </div>
+      <div className="grid md:grid-cols-2 gap-3">
+        <div className="space-y-1">
+          <label className="field-label">Numer umowy</label>
+          <input
+            value={worker.contractNumber || ""}
+            onChange={(e) => handleChange("contractNumber")(e.target.value)}
+            className="field-input"
+            placeholder="np. UZ/2025/001"
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="field-label">Data podpisania</label>
+          <input
+            type="date"
+            value={worker.contractDate || ""}
+            onChange={(e) => handleChange("contractDate")(e.target.value)}
+            className="field-input"
+          />
+        </div>
       </div>
       <div className="flex gap-2 justify-end pt-2">
         {onCancel ? (
