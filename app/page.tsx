@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { InvoiceForm } from "./components/InvoiceForm";
-import { InvoicePreview } from "./components/InvoicePreview";
 import { loadWorkers } from "./lib/storage";
 import { InvoiceInput, SignatureInfo, Worker } from "./lib/types";
 import { createSignatureInfo } from "./lib/signature";
@@ -19,6 +18,11 @@ const PDFGenerator = dynamic(() => import("./components/PDFGenerator").then((mod
       Ładowanie...
     </button>
   ),
+});
+
+const PDFPreview = dynamic(() => import("./components/PDFGenerator").then((mod) => mod.PDFPreview), {
+  ssr: false,
+  loading: () => <div className="card p-6 text-sm text-slate-700">Ładowanie podglądu PDF...</div>,
 });
 
 export default function HomePage() {
@@ -103,13 +107,7 @@ export default function HomePage() {
 
         <div className="space-y-3">
           <p className="section-title">Podgląd PDF (pełna szerokość A4)</p>
-          <InvoicePreview
-            worker={selectedWorker}
-            invoice={invoice}
-            grossTotal={grossTotal}
-            signature={signature}
-            className="mx-auto w-full max-w-[900px]"
-          />
+          <PDFPreview worker={selectedWorker} invoice={invoice} grossTotal={grossTotal} signature={signature} />
         </div>
       </div>
     </div>

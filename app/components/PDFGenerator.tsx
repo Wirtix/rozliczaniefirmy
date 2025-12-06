@@ -1,6 +1,6 @@
 "use client";
 
-import { Document, Font, Image, Page, PDFDownloadLink, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { BlobProvider, Document, Font, Image, Page, PDFDownloadLink, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { COMPANY_INFO } from "../lib/company";
 import { amountToWords, formatCurrency, formatDateTime, wrapSignatureId } from "../lib/format";
 import { InvoiceInput, SignatureInfo, Worker } from "../lib/types";
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   signatureMeta: { fontSize: 9, lineHeight: 1.4 },
 });
 
-function InvoiceDocument({
+export function InvoiceDocument({
   worker,
   invoice,
   grossTotal,
@@ -226,5 +226,57 @@ export function PDFGenerator({
         return "Pobierz PDF";
       }}
     </PDFDownloadLink>
+  );
+}
+
+export function PDFPreview({
+  worker,
+  invoice,
+  grossTotal,
+  signature,
+}: {
+  worker?: Worker;
+  invoice: InvoiceInput;
+  grossTotal: number;
+  signature: SignatureInfo | null;
+}) {
+  if (!signature) {
+    return (
+      <div className="card p-6 text-sm text-slate-700">
+        <p>Trwa przygotowywanie podpisu do podglądu PDF...</p>
+      </div>
+    );
+  }
+
+  return (
+    <BlobProvider document={<InvoiceDocument worker={worker} invoice={invoice} grossTotal={grossTotal} signature={signature} />}>
+      {({ url, loading, error }) => {
+        if (error) {
+          return (
+            <div className="card p-6 text-sm text-red-700">
+              <p>Nie udało się przygotować podglądu PDF.</p>
+            </div>
+          );
+        }
+
+        if (loading || !url) {
+          return (
+            <div className="card p-6 text-sm text-slate-700">
+              <p>Ładowanie podglądu PDF...</p>
+            </div>
+          );
+        }
+
+        return (
+          <div className="card overflow-hidden border border-slate-200 bg-white shadow-sm">
+            <iframe
+              src={url}
+              title="Podgląd wygenerowanego PDF"
+              className="h-[1100px] w-full border-0"
+            />
+          </div>
+        );
+      }}
+    </BlobProvider>
   );
 }
