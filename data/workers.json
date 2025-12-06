@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "c13fd51e-1f59-4541-a3fe-b6c390381c33",
+    "fullName": "Kamil Małoń",
+    "address": "Swobodna 7/40 15-756 Białystok",
+    "pesel": "DEM310708",
+    "contractNumber": "1",
+    "contractDate": "2025-01-10"
+  },
+  {
+    "id": "f4e7e5be-8d14-4e7a-805c-22bba683defb",
+    "fullName": "Julia Konopko",
+    "address": "Łącznikowa 7A 15-163 Białystok",
+    "pesel": "05221501084",
+    "contractNumber": "3",
+    "contractDate": "2025-01-10"
+  },
+  {
+    "id": "e0587848-526f-4c2f-8956-117a0e4974f9",
+    "fullName": "Izabela Bobryk",
+    "address": "Stare Łepki 44, 08-207 Olszanka",
+    "pesel": "06271310466",
+    "contractNumber": "9",
+    "contractDate": "2025-09-01"
+  },
+  {
+    "id": "17f86bc7-f9a2-48e0-8d3c-493f68c5d5cb",
+    "fullName": "Jagoda Latuszek",
+    "address": "Powstańców Wielkopolskich 12/1, 63-910 Miejska Górka",
+    "pesel": "06301501907",
+    "contractNumber": "7",
+    "contractDate": "2025-08-01"
+  },
+  {
+    "id": "f4341940-728a-4098-a0ab-f4abcddacca0",
+    "fullName": "Tomaszem Kuźmickim",
+    "address": "Sympatyczna 29, 15-666 Białystok",
+    "pesel": "04270901234",
+    "contractNumber": "10",
+    "contractDate": "2025-10-01"
+  },
+  {
+    "id": "3edd57d1-bd22-4eaf-9eab-56db8cbf8a22",
+    "fullName": "Maciej Śledziewski",
+    "address": "Nagórki Jabłoń 29A ,18-300 Zambrów",
+    "pesel": "CGL951718",
+    "contractNumber": "2",
+    "contractDate": "2025-01-10"
+  },
+  {
+    "id": "f852deb2-4b7e-4200-adec-cc43dfca766f",
+    "fullName": "Bartosz Śledziewski",
+    "address": "Nagórki Jabłoń 89A, 18-300 Zambrów",
+    "pesel": "CGL651717",
+    "contractNumber": "6",
+    "contractDate": "2025-07-01"
+  },
+  {
+    "id": "3ba1a08e-e668-45b3-8b2c-beaa845a02b7",
+    "fullName": "Emilia Tyniewicka",
+    "address": "Al.Grunwaldzka 54/7 ,80-241 Gdańsk",
+    "pesel": "DFC713698",
+    "contractNumber": "5",
+    "contractDate": "2025-03-01"
+  },
+  {
+    "id": "7f34195a-0dc4-4179-b90a-a80fd740a5b1",
+    "fullName": "Mateusz Konopka",
+    "address": "Osiedlowa 17,Fasty 15-694 ",
+    "pesel": "DES588994",
+    "contractNumber": "4",
+    "contractDate": "2025-02-01"
+  }
+]
