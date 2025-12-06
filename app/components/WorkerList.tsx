@@ -49,7 +49,7 @@ export function WorkerList({ workers, onChange, onSelect }: WorkerListProps) {
                 <div className="space-y-1">
                   <p className="font-semibold text-primary">{worker.fullName}</p>
                   <p className="text-sm text-slate-600 whitespace-pre-wrap">{worker.address}</p>
-                  <p className="text-xs text-slate-500">PESEL: {worker.pesel}</p>
+                  <p className="text-xs text-slate-500">{worker.pesel}</p>
                   {(worker.contractNumber || worker.contractDate) && (
                     <p className="text-xs text-slate-500">
                       Umowa: {worker.contractNumber || "-"}

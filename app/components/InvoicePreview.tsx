@@ -47,7 +47,7 @@ export function InvoicePreview({ worker, invoice, grossTotal, signature, classNa
         <div>
           <p className="font-semibold">Zleceniobiorca: {worker?.fullName || "................................"}</p>
           <p>{worker?.address || "........................................................"}</p>
-          <p>PESEL: {worker?.pesel || "................"}</p>
+          <p>{worker?.pesel || "................"}</p>
         </div>
         <p className="text-slate-700">
           za wykonanie prac zgodnie z umową nr: {worker?.contractNumber || "........"} z dnia {worker?.contractDate || "........"} w

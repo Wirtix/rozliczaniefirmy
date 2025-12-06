@@ -146,7 +146,7 @@ export function InvoiceDocument({
         <View style={styles.block}>
           <Text style={styles.label}>Zleceniobiorca: {worker?.fullName || "........................................................"}</Text>
           <Text>{worker?.address || "..........................................................................................."}</Text>
-          <Text>PESEL: {worker?.pesel || "................................"}</Text>
+          <Text>{worker?.pesel || "................................"}</Text>
         </View>
 
         <View style={styles.block}>
