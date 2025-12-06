@@ -103,26 +103,29 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
   };
 
   return (
-    <div className="card p-5 space-y-5">
-      <div className="flex items-center justify-between">
+    <div className="card p-5 space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="section-title">Dane rachunku</p>
           <h2 className="text-lg font-semibold text-primary">Formularz generowania</h2>
         </div>
-        <div className="text-right text-sm text-slate-500">
-          <p>Kwota brutto</p>
-          <p className="text-xl font-semibold text-primary">{formatCurrency(grossValue)}</p>
+        <div className="rounded-xl bg-primary/10 px-4 py-3 text-right text-sm text-primary shadow-inner">
+          <p className="text-xs uppercase tracking-wide text-primary/80">Kwota brutto</p>
+          <p className="text-2xl font-bold leading-tight">{formatCurrency(grossValue)}</p>
         </div>
       </div>
 
-      <div className="space-y-3">
-        <div className="flex flex-wrap items-end gap-3">
-          <div className="flex-1 min-w-[230px] space-y-1">
-            <label className="field-label">Pracownik</label>
+      <div className="rounded-2xl border border-slate-100 bg-gradient-to-r from-indigo-50 via-white to-sky-50 p-4 shadow-inner space-y-4">
+        <div className="grid gap-3 xl:grid-cols-[1.1fr_1.5fr_1fr]">
+          <div className="flex flex-col gap-2 rounded-xl border border-white/70 bg-white/80 p-3 shadow-sm">
+            <div className="flex items-center justify-between">
+              <p className="field-label">Pracownik</p>
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">profil</span>
+            </div>
             <select
               value={invoice.workerId}
               onChange={(e) => handleChange("workerId", e.target.value)}
-              className="field-input"
+              className="field-input bg-white/80 ring-1 ring-white"
             >
               {workers.length === 0 && <option>Brak pracowników</option>}
               {workers.map((worker) => (
@@ -131,48 +134,49 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
                 </option>
               ))}
             </select>
+            <p className="text-xs text-slate-500">Wybierz osobę z zapisanej listy pracowników.</p>
           </div>
 
-          <div className="flex flex-1 min-w-[260px] flex-wrap items-end gap-2">
-            <div className="space-y-1">
-              <label className="field-label">Okres</label>
-              <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
-                <button
-                  type="button"
-                  onClick={() => handleMonthChange(invoice.periodMonth || currentMonth)}
-                  className={`min-w-[120px] rounded-md px-3 py-2 text-sm font-medium transition ${
-                    invoice.periodMode === "month"
-                      ? "bg-primary text-white shadow"
-                      : "text-slate-700 hover:bg-slate-100"
-                  }`}
-                >
-                  Miesiąc
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setInvoice((prev) => ({
-                      ...prev,
-                      periodMode: "custom",
-                      period: customRangeLabel(prev.periodFrom, prev.periodTo),
-                    }))
-                  }
-                  className={`min-w-[120px] rounded-md px-3 py-2 text-sm font-medium transition ${
-                    invoice.periodMode === "custom"
-                      ? "bg-primary text-white shadow"
-                      : "text-slate-700 hover:bg-slate-100"
-                  }`}
-                >
-                  Własny zakres
-                </button>
-              </div>
+          <div className="flex flex-col gap-2 rounded-xl border border-white/70 bg-white/80 p-3 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="field-label">Okres rozliczenia</p>
+              <span className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary">{invoice.periodMode === "month" ? "Miesięczny" : "Własny zakres"}</span>
             </div>
-
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => handleMonthChange(invoice.periodMonth || currentMonth)}
+                className={`rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition ${
+                  invoice.periodMode === "month"
+                    ? "bg-primary text-white shadow"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                Miesiąc
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setInvoice((prev) => ({
+                    ...prev,
+                    periodMode: "custom",
+                    period: customRangeLabel(prev.periodFrom, prev.periodTo),
+                  }))
+                }
+                className={`rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition ${
+                  invoice.periodMode === "custom"
+                    ? "bg-primary text-white shadow"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                Własny zakres
+              </button>
+            </div>
             {invoice.periodMode === "month" ? (
               <select
                 value={invoice.periodMonth}
                 onChange={(e) => handleMonthChange(e.target.value)}
-                className="field-input min-w-[190px]"
+                className="field-input bg-white/80 ring-1 ring-white"
               >
                 {monthOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -181,73 +185,118 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
                 ))}
               </select>
             ) : (
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                 <input
                   type="date"
                   value={invoice.periodFrom || ""}
                   onChange={(e) => handleCustomDateChange("periodFrom", e.target.value)}
-                  className="field-input min-w-[150px]"
+                  className="field-input bg-white/80 ring-1 ring-white"
                 />
                 <input
                   type="date"
                   value={invoice.periodTo || ""}
                   onChange={(e) => handleCustomDateChange("periodTo", e.target.value)}
-                  className="field-input min-w-[150px]"
+                  className="field-input bg-white/80 ring-1 ring-white"
                 />
               </div>
             )}
           </div>
+
+          <div className="grid gap-3 rounded-xl border border-white/70 bg-white/80 p-3 shadow-sm">
+            <div className="space-y-1">
+              <label className="field-label flex items-center justify-between">
+                Numer rachunku
+                <button
+                  type="button"
+                  className="text-xs font-semibold text-accent underline"
+                  onClick={() => setInvoice((prev) => ({ ...prev, invoiceNumber: nextInvoiceNumber() }))}
+                >
+                  Generuj
+                </button>
+              </label>
+              <input
+                value={invoice.invoiceNumber}
+                onChange={(e) => handleChange("invoiceNumber", e.target.value)}
+                className="field-input bg-white/80 ring-1 ring-white"
+                placeholder="R/2025/0001"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="field-label">Data wystawienia</label>
+              <input
+                type="date"
+                value={invoice.issueDate}
+                onChange={(e) => handleChange("issueDate", e.target.value)}
+                className="field-input bg-white/80 ring-1 ring-white"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-          <span className="font-semibold text-slate-600">Zakres:</span>
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">{invoice.period || "uzupełnij daty"}</span>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
+            <label className="field-label">Liczba godzin</label>
+            <input
+              type="number"
+              min="0"
+              step="0.5"
+              value={invoice.hours ?? ""}
+              onChange={(e) => handleChange("hours", e.target.value)}
+              className="field-input bg-white"
+              placeholder="np. 40"
+            />
+          </div>
+          <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
+            <label className="field-label">Stawka brutto (zł)</label>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={invoice.rate ?? ""}
+              onChange={(e) => handleChange("rate", e.target.value)}
+              className="field-input bg-white"
+              placeholder="np. 80"
+            />
+          </div>
+          <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
+            <label className="field-label">Kwota brutto (opcjonalnie)</label>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={invoice.grossAmount ?? ""}
+              onChange={(e) => handleChange("grossAmount", e.target.value)}
+              className="field-input bg-white"
+              placeholder="np. 3200"
+            />
+          </div>
+          <div className="rounded-xl border border-white/70 bg-white p-3 shadow-sm">
+            <p className="field-label">Aktualny zakres</p>
+            <p className="mt-2 rounded-lg border border-dashed border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700">
+              {invoice.period || "uzupełnij daty"}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="space-y-1">
-          <label className="field-label">Liczba godzin</label>
-          <input
-            type="number"
-            min="0"
-            step="0.5"
-            value={invoice.hours ?? ""}
-            onChange={(e) => handleChange("hours", e.target.value)}
-            className="field-input"
-            placeholder="np. 40"
+      <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
+        <div className="space-y-2">
+          <label className="field-label">Uwagi / opis</label>
+          <textarea
+            value={invoice.description || ""}
+            onChange={(e) => handleChange("description", e.target.value)}
+            className="field-input min-h-[90px] rounded-xl"
+            placeholder="Dodatkowe informacje do rachunku"
           />
         </div>
-        <div className="space-y-1">
-          <label className="field-label">Stawka brutto (zł)</label>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={invoice.rate ?? ""}
-            onChange={(e) => handleChange("rate", e.target.value)}
-            className="field-input"
-            placeholder="np. 80"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="field-label">Kwota brutto (opcjonalnie)</label>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={invoice.grossAmount ?? ""}
-            onChange={(e) => handleChange("grossAmount", e.target.value)}
-            className="field-input"
-            placeholder="np. 3200"
-          />
-        </div>
-      </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <label className="field-label">Logo firmy (opcjonalnie)</label>
-          <div className="flex items-center gap-3">
+        <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between">
+            <p className="field-label">Logo firmy (opcjonalnie)</p>
+            {invoice.logoDataUrl && <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">dodano</span>}
+          </div>
+          <p className="text-xs text-slate-500">Dodaj znak graficzny, który pojawi się w PDF.</p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
             <input
               type="file"
               accept="image/*"
@@ -258,54 +307,14 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
               <button
                 type="button"
                 onClick={() => handleLogoUpload(null)}
-                className="text-xs text-red-500 underline"
+                className="text-xs font-semibold text-red-500 underline"
               >
                 Usuń logo
               </button>
             )}
           </div>
-          {invoice.logoDataUrl && <p className="text-xs text-green-700">Logo będzie dołączone do PDF i podglądu.</p>}
+          {invoice.logoDataUrl && <p className="mt-2 text-xs text-green-700">Logo będzie dołączone do PDF i podglądu.</p>}
         </div>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="space-y-1">
-          <label className="field-label">Data wystawienia</label>
-          <input
-            type="date"
-            value={invoice.issueDate}
-            onChange={(e) => handleChange("issueDate", e.target.value)}
-            className="field-input"
-          />
-        </div>
-        <div className="space-y-1 md:col-span-2">
-          <label className="field-label flex items-center justify-between">
-            Numer rachunku
-            <button
-              type="button"
-              className="text-xs text-accent underline"
-              onClick={() => setInvoice((prev) => ({ ...prev, invoiceNumber: nextInvoiceNumber() }))}
-            >
-              Wygeneruj kolejny
-            </button>
-          </label>
-          <input
-            value={invoice.invoiceNumber}
-            onChange={(e) => handleChange("invoiceNumber", e.target.value)}
-            className="field-input"
-            placeholder="R/2025/0001"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-1">
-        <label className="field-label">Uwagi / opis</label>
-        <textarea
-          value={invoice.description || ""}
-          onChange={(e) => handleChange("description", e.target.value)}
-          className="field-input min-h-[80px]"
-          placeholder="Dodatkowe informacje do rachunku"
-        />
       </div>
     </div>
   );
