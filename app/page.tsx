@@ -40,7 +40,14 @@ export default function HomePage() {
   const [signature, setSignature] = useState<SignatureInfo | null>(null);
 
   useEffect(() => {
-    setWorkers(loadWorkers());
+    let mounted = true;
+    loadWorkers().then((data) => {
+      if (mounted) setWorkers(data);
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const handleInvoiceChange = useCallback((data: InvoiceInput, total: number) => {
@@ -87,7 +94,7 @@ export default function HomePage() {
           <div className="rounded-xl border border-cyan-100 bg-gradient-to-r from-cyan-50 via-white to-emerald-50 p-4 shadow-sm">
             <p className="section-title text-cyan-700">Przydatne wskazówki</p>
             <ul className="list-disc list-inside space-y-1 text-sm text-cyan-900">
-              <li>Pracownicy są zapisywani w localStorage i dostępni tylko lokalnie.</li>
+              <li>Pracownicy są zapisywani na serwerze aplikacji w pliku JSON.</li>
               <li>Kwotę brutto wpisz bezpośrednio – pola godzin i stawki zostały uproszczone.</li>
               <li>Numer rachunku generowany jest automatycznie i rośnie przy kolejnych dokumentach.</li>
             </ul>
