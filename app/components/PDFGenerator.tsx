@@ -43,7 +43,7 @@ function sanitizeFileSegment(value: string) {
   return value
     .trim()
     .replace(/\s+/g, "-")
-    .replace(/[^a-zA-Z0-9\-_.]/g, "");
+    .replace(/[^\p{L}\p{N}\-_.]/gu, "");
 }
 
 function buildInvoiceFileName(invoice: InvoiceInput, worker?: Worker) {
