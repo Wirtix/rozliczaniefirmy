@@ -115,57 +115,64 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <label className="field-label">Pracownik</label>
-          <select
-            value={invoice.workerId}
-            onChange={(e) => handleChange("workerId", e.target.value)}
-            className="field-input"
-          >
-            {workers.length === 0 && <option>Brak pracowników</option>}
-            {workers.map((worker) => (
-              <option key={worker.id} value={worker.id}>
-                {worker.fullName}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="space-y-1">
-          <label className="field-label">Okres zlecenia</label>
-          <div className="space-y-2">
-            <div className="flex gap-2 text-sm">
-              <button
-                type="button"
-                onClick={() => handleMonthChange(invoice.periodMonth || currentMonth)}
-                className={`px-3 py-1 rounded border text-left flex-1 ${
-                  invoice.periodMode === "month"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-slate-200 bg-white text-slate-700"
-                }`}
-              >
-                Pełny miesiąc
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setInvoice((prev) => ({ ...prev, periodMode: "custom", period: customRangeLabel(prev.periodFrom, prev.periodTo) }))
-                }
-                className={`px-3 py-1 rounded border text-left flex-1 ${
-                  invoice.periodMode === "custom"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-slate-200 bg-white text-slate-700"
-                }`}
-              >
-                Własny zakres
-              </button>
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="flex-1 min-w-[230px] space-y-1">
+            <label className="field-label">Pracownik</label>
+            <select
+              value={invoice.workerId}
+              onChange={(e) => handleChange("workerId", e.target.value)}
+              className="field-input"
+            >
+              {workers.length === 0 && <option>Brak pracowników</option>}
+              {workers.map((worker) => (
+                <option key={worker.id} value={worker.id}>
+                  {worker.fullName}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-1 min-w-[260px] flex-wrap items-end gap-2">
+            <div className="space-y-1">
+              <label className="field-label">Okres</label>
+              <div className="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => handleMonthChange(invoice.periodMonth || currentMonth)}
+                  className={`min-w-[120px] rounded-md px-3 py-2 text-sm font-medium transition ${
+                    invoice.periodMode === "month"
+                      ? "bg-primary text-white shadow"
+                      : "text-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  Miesiąc
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setInvoice((prev) => ({
+                      ...prev,
+                      periodMode: "custom",
+                      period: customRangeLabel(prev.periodFrom, prev.periodTo),
+                    }))
+                  }
+                  className={`min-w-[120px] rounded-md px-3 py-2 text-sm font-medium transition ${
+                    invoice.periodMode === "custom"
+                      ? "bg-primary text-white shadow"
+                      : "text-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  Własny zakres
+                </button>
+              </div>
             </div>
 
             {invoice.periodMode === "month" ? (
               <select
                 value={invoice.periodMonth}
                 onChange={(e) => handleMonthChange(e.target.value)}
-                className="field-input"
+                className="field-input min-w-[190px]"
               >
                 {monthOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -174,29 +181,27 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
                 ))}
               </select>
             ) : (
-              <div className="grid grid-cols-2 gap-2">
-                <div className="space-y-1">
-                  <label className="text-xs text-slate-500">Data od</label>
-                  <input
-                    type="date"
-                    value={invoice.periodFrom || ""}
-                    onChange={(e) => handleCustomDateChange("periodFrom", e.target.value)}
-                    className="field-input"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs text-slate-500">Data do</label>
-                  <input
-                    type="date"
-                    value={invoice.periodTo || ""}
-                    onChange={(e) => handleCustomDateChange("periodTo", e.target.value)}
-                    className="field-input"
-                  />
-                </div>
+              <div className="flex flex-wrap gap-2">
+                <input
+                  type="date"
+                  value={invoice.periodFrom || ""}
+                  onChange={(e) => handleCustomDateChange("periodFrom", e.target.value)}
+                  className="field-input min-w-[150px]"
+                />
+                <input
+                  type="date"
+                  value={invoice.periodTo || ""}
+                  onChange={(e) => handleCustomDateChange("periodTo", e.target.value)}
+                  className="field-input min-w-[150px]"
+                />
               </div>
             )}
-            <p className="text-xs text-slate-500">Wyświetlany okres: {invoice.period || "(uzupełnij daty)"}</p>
           </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+          <span className="font-semibold text-slate-600">Zakres:</span>
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">{invoice.period || "uzupełnij daty"}</span>
         </div>
       </div>
 
