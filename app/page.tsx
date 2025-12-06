@@ -28,9 +28,14 @@ export default function HomePage() {
     rate: null,
     grossAmount: null,
     period: "",
+    periodMode: "month",
+    periodMonth: new Date().toISOString().slice(0, 7),
+    periodFrom: "",
+    periodTo: "",
     description: "",
     issueDate: new Date().toISOString().slice(0, 10),
     invoiceNumber: "",
+    logoDataUrl: null,
   });
   const [grossTotal, setGrossTotal] = useState(0);
 

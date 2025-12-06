@@ -102,3 +102,53 @@ export function formatCurrency(amount: number | null | undefined): string {
     })
     .replace("PLN", "zł");
 }
+
+const monthNames = [
+  "Styczeń",
+  "Luty",
+  "Marzec",
+  "Kwiecień",
+  "Maj",
+  "Czerwiec",
+  "Lipiec",
+  "Sierpień",
+  "Wrzesień",
+  "Październik",
+  "Listopad",
+  "Grudzień",
+];
+
+function pad(value: number) {
+  return String(value).padStart(2, "0");
+}
+
+export function formatDate(date: Date) {
+  const day = pad(date.getDate());
+  const month = pad(date.getMonth() + 1);
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+}
+
+export function monthRangeLabel(monthValue: string): { label: string; range: string } {
+  if (!monthValue) return { label: "", range: "" };
+  const [yearStr, monthStr] = monthValue.split("-");
+  const year = Number(yearStr);
+  const monthIndex = Number(monthStr) - 1;
+  if (Number.isNaN(year) || Number.isNaN(monthIndex)) return { label: "", range: "" };
+
+  const firstDay = new Date(year, monthIndex, 1);
+  const lastDay = new Date(year, monthIndex + 1, 0);
+  return {
+    label: `${monthNames[monthIndex]} ${year}`,
+    range: `${formatDate(firstDay)} - ${formatDate(lastDay)}`,
+  };
+}
+
+export function customRangeLabel(from?: string, to?: string): string {
+  if (from && to) {
+    const start = formatDate(new Date(from));
+    const end = formatDate(new Date(to));
+    return `${start} - ${end}`;
+  }
+  return "";
+}

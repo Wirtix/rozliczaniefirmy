@@ -16,8 +16,15 @@ export function InvoicePreview({ worker, invoice, grossTotal }: InvoicePreviewPr
 
   return (
     <div className="card p-6 space-y-6">
-      <div className="flex justify-end text-sm text-slate-600">
-        {city}, dn. {invoice.issueDate}
+      <div className="flex justify-between items-start text-sm text-slate-600">
+        {invoice.logoDataUrl ? (
+          <img src={invoice.logoDataUrl} alt="Logo firmy" className="h-12 w-auto object-contain" />
+        ) : (
+          <div />
+        )}
+        <div>
+          {city}, dn. {invoice.issueDate}
+        </div>
       </div>
 
       <div className="text-center space-y-1">

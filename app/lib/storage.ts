@@ -2,6 +2,7 @@ import { Worker } from "./types";
 
 const WORKERS_KEY = "rf_workers";
 const INVOICE_NUMBER_KEY = "rf_invoice_counter";
+const LOGO_KEY = "rf_company_logo";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -30,4 +31,18 @@ export function nextInvoiceNumber(): string {
   window.localStorage.setItem(INVOICE_NUMBER_KEY, String(next));
   const year = new Date().getFullYear();
   return `R/${year}/${String(next).padStart(4, "0")}`;
+}
+
+export function loadLogo(): string | null {
+  if (!isBrowser) return null;
+  return window.localStorage.getItem(LOGO_KEY);
+}
+
+export function persistLogo(dataUrl: string | null) {
+  if (!isBrowser) return;
+  if (!dataUrl) {
+    window.localStorage.removeItem(LOGO_KEY);
+    return;
+  }
+  window.localStorage.setItem(LOGO_KEY, dataUrl);
 }

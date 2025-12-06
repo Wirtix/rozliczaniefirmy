@@ -11,8 +11,13 @@ export type InvoiceInput = {
   rate: number | null;
   grossAmount: number | null;
   period: string;
+  periodMode: "month" | "custom";
+  periodMonth?: string;
+  periodFrom?: string;
+  periodTo?: string;
   issueDate: string;
   invoiceNumber: string;
+  logoDataUrl?: string | null;
   description?: string;
 };
 

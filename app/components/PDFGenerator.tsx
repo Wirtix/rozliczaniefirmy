@@ -1,6 +1,6 @@
 "use client";
 
-import { Document, Font, Page, PDFDownloadLink, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Document, Font, Image, Page, PDFDownloadLink, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { COMPANY_INFO } from "../lib/company";
 import { amountToWords, formatCurrency } from "../lib/format";
 import { InvoiceInput, Worker } from "../lib/types";
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
   signLine: { width: "100%", borderBottomWidth: 1, borderColor: "#1f2937", marginBottom: 6, height: 16 },
   titleRight: { fontSize: 10, textAlign: "right" },
   sectionTitle: { fontSize: 11, fontWeight: "bold", marginBottom: 4 },
+  logo: { width: 120, marginBottom: 8 },
 });
 
 function InvoiceDocument({ worker, invoice, grossTotal }: { worker?: Worker; invoice: InvoiceInput; grossTotal: number }) {
@@ -65,7 +66,8 @@ function InvoiceDocument({ worker, invoice, grossTotal }: { worker?: Worker; inv
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={{ flexDirection: "row", justifyContent: "flex-end", marginBottom: 12 }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 12 }}>
+          {invoice.logoDataUrl ? <Image style={styles.logo} src={invoice.logoDataUrl} /> : <View />}
           <Text style={styles.titleRight}>
             {city}, dn. {issueDate}
           </Text>
