@@ -8,13 +8,13 @@ export type InvoicePreviewProps = {
   worker?: Worker;
   invoice: InvoiceInput;
   grossTotal: number;
-  signature: SignatureInfo;
+  signature: SignatureInfo | null;
 };
 
 export function InvoicePreview({ worker, invoice, grossTotal, signature }: InvoicePreviewProps) {
   const words = amountToWords(grossTotal || 0);
   const city = COMPANY_INFO.city || COMPANY_INFO.addressLine2;
-  const signedAt = formatDateTime(new Date(signature.signedAtISO));
+  const signedAt = signature ? formatDateTime(new Date(signature.signedAtISO)) : "";
 
   return (
     <div className="card p-6 space-y-6">
@@ -106,9 +106,15 @@ export function InvoicePreview({ worker, invoice, grossTotal, signature }: Invoi
             <p className="text-xs mt-2">Zleceniodawca</p>
             <div className="mt-3 p-3 border border-dashed border-slate-300 rounded text-left text-[11px] leading-tight bg-slate-50">
               <p className="font-semibold text-slate-800">Podpisano elektronicznie</p>
-              <p>Przez: {signature.signerName}</p>
-              <p>ID podpisu: {signature.signatureId}</p>
-              <p>Data: {signedAt}</p>
+              {signature ? (
+                <>
+                  <p>Przez: {signature.signerName}</p>
+                  <p>ID podpisu: {signature.signatureId}</p>
+                  <p>Data: {signedAt}</p>
+                </>
+              ) : (
+                <p className="text-slate-600">Trwa generowanie podpisu...</p>
+              )}
             </div>
           </div>
         </div>

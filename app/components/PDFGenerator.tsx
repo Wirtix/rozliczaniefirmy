@@ -198,8 +198,19 @@ export function PDFGenerator({
   worker?: Worker;
   invoice: InvoiceInput;
   grossTotal: number;
-  signature: SignatureInfo;
+  signature: SignatureInfo | null;
 }) {
+  if (!signature) {
+    return (
+      <button
+        disabled
+        className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-300 text-white font-semibold shadow-sm disabled:opacity-70"
+      >
+        Generowanie podpisu...
+      </button>
+    );
+  }
+
   return (
     <PDFDownloadLink
       document={<InvoiceDocument worker={worker} invoice={invoice} grossTotal={grossTotal} signature={signature} />}

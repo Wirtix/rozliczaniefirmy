@@ -39,7 +39,7 @@ export default function HomePage() {
     logoDataUrl: null,
   });
   const [grossTotal, setGrossTotal] = useState(0);
-  const [signature, setSignature] = useState<SignatureInfo>(() => createSignatureInfo());
+  const [signature, setSignature] = useState<SignatureInfo | null>(null);
 
   useEffect(() => {
     setWorkers(loadWorkers());
