@@ -3,6 +3,7 @@
 import { BlobProvider, Document, Font, Image, Page, PDFDownloadLink, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { COMPANY_INFO } from "../lib/company";
 import { amountToWords, formatCurrency, formatDateTime, wrapSignatureId } from "../lib/format";
+import { persistInvoiceRecord } from "../lib/storage";
 import { InvoiceInput, SignatureInfo, Worker } from "../lib/types";
 
 // Avoid double registration during Fast Refresh
@@ -29,6 +30,13 @@ function ensureFontRegistered() {
   });
 
   fontRegistered = true;
+}
+
+function createRecordId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `inv-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 const styles = StyleSheet.create({
@@ -203,6 +211,18 @@ export function PDFGenerator({
   grossTotal: number;
   signature: SignatureInfo | null;
 }) {
+  const handleSave = () => {
+    if (!signature) return;
+    persistInvoiceRecord({
+      id: createRecordId(),
+      createdAt: new Date().toISOString(),
+      invoice,
+      worker,
+      grossTotal,
+      signature,
+    });
+  };
+
   if (!signature) {
     return (
       <button
@@ -219,6 +239,7 @@ export function PDFGenerator({
       document={<InvoiceDocument worker={worker} invoice={invoice} grossTotal={grossTotal} signature={signature} />}
       fileName={`${invoice.invoiceNumber || "rachunek"}.pdf`}
       className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-white font-semibold shadow-sm hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed"
+      onClick={handleSave}
     >
       {({ loading, error }) => {
         if (error) return "Błąd generowania";

@@ -1,8 +1,9 @@
-import { Worker } from "./types";
+import { InvoiceRecord, Worker } from "./types";
 
 const WORKERS_ENDPOINT = "/api/workers";
 const INVOICE_NUMBER_KEY = "rf_invoice_counter";
 const LOGO_KEY = "rf_company_logo";
+const INVOICE_HISTORY_KEY = "rf_invoice_history";
 
 const isBrowser = typeof window !== "undefined";
 
@@ -51,4 +52,29 @@ export function persistLogo(dataUrl: string | null) {
     return;
   }
   window.localStorage.setItem(LOGO_KEY, dataUrl);
+}
+
+function safeParseInvoices(raw: string | null): InvoiceRecord[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as InvoiceRecord[];
+    if (!Array.isArray(parsed)) return [];
+    return parsed;
+  } catch (error) {
+    console.warn("Nie udało się odczytać zapisanych rachunków", error);
+    return [];
+  }
+}
+
+export function loadInvoices(): InvoiceRecord[] {
+  if (!isBrowser) return [];
+  const raw = window.localStorage.getItem(INVOICE_HISTORY_KEY);
+  return safeParseInvoices(raw);
+}
+
+export function persistInvoiceRecord(record: InvoiceRecord) {
+  if (!isBrowser) return;
+  const existing = loadInvoices();
+  const updated = [record, ...existing.filter((item) => item.id !== record.id)];
+  window.localStorage.setItem(INVOICE_HISTORY_KEY, JSON.stringify(updated));
 }
