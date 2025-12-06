@@ -101,7 +101,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8fafc",
   },
   signatureLabel: { fontSize: 10, fontWeight: "bold", marginBottom: 2 },
-  signatureMeta: { fontSize: 9, lineHeight: 1.4 },
+  signatureMeta: { fontSize: 9, lineHeight: 1.4, wordBreak: "break-word" },
+  signatureId: { fontSize: 8, wordBreak: "break-word" },
 });
 
 export function InvoiceDocument({
@@ -211,7 +212,7 @@ export function InvoiceDocument({
             <View style={styles.signatureStamp}>
             <Text style={styles.signatureLabel}>Podpisano elektronicznie</Text>
             <Text style={styles.signatureMeta}>Przez: {signature.signerName}</Text>
-            <Text style={[styles.signatureMeta, { fontSize: 8 }]} wrap>
+            <Text style={styles.signatureId} wrap>
               ID podpisu: {signatureIdWrapped}
             </Text>
             <Text style={styles.signatureMeta}>Data: {signedAt}</Text>
