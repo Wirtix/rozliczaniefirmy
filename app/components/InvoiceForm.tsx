@@ -12,7 +12,7 @@ export type InvoiceFormProps = {
 
 const today = new Date().toISOString().slice(0, 10);
 const currentMonth = new Date().toISOString().slice(0, 7);
-const bundledLogoPath = "/branding/logo-placeholder.svg";
+const bundledLogoPath = "/branding/logo-placeholder.png";
 
 const monthOptions = Array.from({ length: 12 }).map((_, index) => {
   const date = new Date();
