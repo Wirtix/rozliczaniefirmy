@@ -39,6 +39,34 @@ function createRecordId() {
   return `inv-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function sanitizeFileSegment(value: string) {
+  return value
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9\-_.]/g, "");
+}
+
+function buildInvoiceFileName(invoice: InvoiceInput, worker?: Worker) {
+  const baseName = sanitizeFileSegment(invoice.invoiceNumber || "rachunek");
+
+  const monthNumber = (() => {
+    if (invoice.periodMode === "month" && invoice.periodMonth) {
+      return invoice.periodMonth.split("-")[1];
+    }
+    if (invoice.periodFrom) {
+      return invoice.periodFrom.split("-")[1];
+    }
+    if (invoice.issueDate) {
+      return invoice.issueDate.split("-")[1];
+    }
+    return "miesiac";
+  })();
+
+  const tutorName = sanitizeFileSegment(worker?.fullName || "bez-korepetytora");
+
+  return `${baseName}-${monthNumber}-${tutorName}.pdf`;
+}
+
 const styles = StyleSheet.create({
   page: {
     padding: 36,
@@ -237,7 +265,7 @@ export function PDFGenerator({
   return (
     <PDFDownloadLink
       document={<InvoiceDocument worker={worker} invoice={invoice} grossTotal={grossTotal} signature={signature} />}
-      fileName={`${invoice.invoiceNumber || "rachunek"}.pdf`}
+      fileName={buildInvoiceFileName(invoice, worker)}
       className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-white font-semibold shadow-sm hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed"
       onClick={handleSave}
     >
