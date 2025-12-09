@@ -70,5 +70,13 @@
     "pesel": "DES588994",
     "contractNumber": "4",
     "contractDate": "2025-02-01"
+  },
+  {
+    "id": "0ded2407-60f8-4605-aa76-84ac3ee113fd",
+    "fullName": "Julia Kurstak",
+    "address": "ul. KALINOWSKIEGO 8/3 15-875 BIAŁYSTOK",
+    "pesel": "06281803684",
+    "contractNumber": "11",
+    "contractDate": "2025-10-26"
   }
 ]
