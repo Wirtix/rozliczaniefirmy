@@ -35,6 +35,7 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
     issueDate: today,
     invoiceNumber: nextInvoiceNumber(),
     logoDataUrl: bundledLogoPath,
+    paymentMethod: "transfer", // Domyślna metoda płatności
   });
 
   useEffect(() => {
@@ -201,6 +202,21 @@ export function InvoiceForm({ workers, onChange }: InvoiceFormProps) {
                   placeholder="R/2025/0001"
                 />
               </div>
+
+              {/* Dodano pole wyboru metody płatności */}
+              <div className="space-y-1">
+                <label className="field-label text-emerald-900">Metoda płatności</label>
+                <select
+                  value={invoice.paymentMethod}
+                  onChange={(e) => handleChange("paymentMethod", e.target.value)}
+                  className="field-input bg-white/80 ring-1 ring-emerald-100"
+                >
+                  <option value="transfer">Przelew</option>
+                  <option value="cash">Gotówka</option>
+                  <option value="mixed">Przelew / Gotówka</option>
+                </select>
+              </div>
+
               <div className="space-y-1">
                 <label className="field-label text-emerald-900">Data wystawienia</label>
                 <input

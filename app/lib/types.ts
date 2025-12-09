@@ -19,6 +19,7 @@ export type InvoiceInput = {
   invoiceNumber: string;
   logoDataUrl?: string | null;
   description?: string;
+  paymentMethod: PaymentMethod;
 };
 
 export type CompanyInfo = {

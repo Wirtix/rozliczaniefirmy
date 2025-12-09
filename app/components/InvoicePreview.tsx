@@ -13,11 +13,20 @@ export type InvoicePreviewProps = {
   className?: string;
 };
 
+const paymentLabels: Record<string, string> = {
+  transfer: "Forma płatności: Przelew",
+  cash: "Forma płatności: Gotówka",
+  mixed: "Forma płatności: Przelew / Gotówka",
+};
+
 export function InvoicePreview({ worker, invoice, grossTotal, signature, className }: InvoicePreviewProps) {
   const words = amountToWords(grossTotal || 0);
   const city = COMPANY_INFO.city || COMPANY_INFO.addressLine2;
   const signedAt = signature ? formatDateTime(new Date(signature.signedAtISO)) : "";
   const signatureIdWrapped = signature ? wrapSignatureId(signature.signatureId) : "";
+
+  // Pobierz odpowiednią etykietę, domyślnie 'Przelew' jeśli brak danych
+  const paymentLabel = paymentLabels[invoice.paymentMethod || "transfer"] || paymentLabels["transfer"];
 
   return (
     <div className={clsx("card p-6 space-y-6 max-w-[820px] mx-auto", className)}>
@@ -127,7 +136,8 @@ export function InvoicePreview({ worker, invoice, grossTotal, signature, classNa
           </div>
         </div>
         <div>
-          <p>Upoważniony do odbioru wynagrodzenia przelewem:</p>
+          {/* Wyświetlamy dynamiczny tekst zamiast statycznego "Upoważniony..." */}
+          <p>{paymentLabel}</p>
           <div className="border-b border-dashed border-slate-300" />
         </div>
       </div>

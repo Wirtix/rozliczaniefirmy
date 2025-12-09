@@ -104,6 +104,12 @@ const styles = StyleSheet.create({
   signatureMeta: { fontSize: 9, lineHeight: 1.4 },
 });
 
+const paymentLabels: Record<string, string> = {
+  transfer: "Forma płatności: Przelew",
+  cash: "Forma płatności: Gotówka",
+  mixed: "Forma płatności: Przelew / Gotówka",
+};
+
 export function InvoiceDocument({
   worker,
   invoice,
@@ -122,6 +128,9 @@ export function InvoiceDocument({
   const grossValue = formatCurrency(grossTotal);
   const signedAt = formatDateTime(new Date(signature.signedAtISO));
   const signatureIdWrapped = wrapSignatureId(signature.signatureId);
+
+  // Pobierz odpowiednią etykietę dla PDF, domyślnie 'Przelew'
+  const paymentLabel = paymentLabels[invoice.paymentMethod || "transfer"] || paymentLabels["transfer"];
 
   return (
     <Document>
@@ -220,7 +229,8 @@ export function InvoiceDocument({
         </View>
 
         <View style={{ marginTop: 24 }}>
-          <Text style={styles.paragraph}>Upoważniony do odbioru wynagrodzenia przelewem:</Text>
+          {/* Użycie dynamicznego tekstu metody płatności */}
+          <Text style={styles.paragraph}>{paymentLabel}</Text>
           <View style={styles.dottedLine} />
         </View>
       </Page>
