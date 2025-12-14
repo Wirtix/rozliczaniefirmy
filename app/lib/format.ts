@@ -163,6 +163,6 @@ export function formatDateTime(date: Date) {
 }
 
 export function wrapSignatureId(id: string): string {
-  // Insert zero-width break hints after hyphens to allow wrapping in narrow containers/PDF boxes
-  return id.replace(/-/g, "-\u200b");
+  // Insert zero-width break hints every 4 characters so very long IDs always wrap inside tight boxes
+  return id.replace(/.{4}/g, "$&\u200b");
 }
