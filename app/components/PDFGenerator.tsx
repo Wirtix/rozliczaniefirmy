@@ -101,7 +101,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8fafc",
   },
   signatureLabel: { fontSize: 10, fontWeight: "bold", marginBottom: 2 },
-  signatureMeta: { fontSize: 9, lineHeight: 1.4 },
+  signatureMeta: { fontSize: 9, lineHeight: 1.4, wordBreak: "break-all" },
+  signatureIdLabel: { fontSize: 9, marginTop: 2, marginBottom: 2, fontWeight: "bold" },
+  signatureIdBox: {
+    fontSize: 8,
+    lineHeight: 1.35,
+    wordBreak: "break-word",
+    backgroundColor: "#0f172a",
+    color: "#f8fafc",
+    paddingVertical: 4,
+    paddingHorizontal: 6,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#1f2937",
+    letterSpacing: 0.2,
+  },
 });
 
 const paymentLabels: Record<string, string> = {
@@ -218,14 +232,15 @@ export function InvoiceDocument({
             <View style={styles.signLine} />
             <Text style={{ fontSize: 10 }}>Zleceniodawca</Text>
             <View style={styles.signatureStamp}>
-            <Text style={styles.signatureLabel}>Podpisano elektronicznie</Text>
-            <Text style={styles.signatureMeta}>Przez: {signature.signerName}</Text>
-            <Text style={[styles.signatureMeta, { fontSize: 8 }]} wrap>
-              ID podpisu: {signatureIdWrapped}
-            </Text>
-            <Text style={styles.signatureMeta}>Data: {signedAt}</Text>
+              <Text style={styles.signatureLabel}>Podpisano elektronicznie</Text>
+              <Text style={styles.signatureMeta}>Przez: {signature.signerName}</Text>
+              <Text style={styles.signatureIdLabel}>ID podpisu</Text>
+              <Text style={styles.signatureIdBox} wrap>
+                {signatureIdWrapped}
+              </Text>
+              <Text style={styles.signatureMeta}>Data: {signedAt}</Text>
+            </View>
           </View>
-        </View>
         </View>
 
         <View style={{ marginTop: 24 }}>
